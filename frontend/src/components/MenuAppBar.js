@@ -12,8 +12,12 @@ import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 
+import FacebookLogin from 'react-facebook-login';
+import axios from 'axios';
+
+
 export default function MenuAppBar() {
-    const [auth, setAuth] = React.useState(true);
+    const [auth, setAuth] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleChange = (event) => {
@@ -27,6 +31,17 @@ export default function MenuAppBar() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const responseFacebook = async (response) => {
+        if (response.accessToken) {
+            // console.log('login with accessToken= ' + response.accessToken)
+            let result = await axios.post('http://localhost:5000/api/login', {
+                token: response.accessToken
+            })
+            // console.log(result.data)
+            sessionStorage.setItem('access_token', result.data.access_token)
+        }
+    }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -54,9 +69,9 @@ export default function MenuAppBar() {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        Photos
+                        Only Cat
                     </Typography>
-                    {auth && (
+                    {auth ? (
                         <div>
                             <IconButton
                                 size="large"
@@ -83,11 +98,17 @@ export default function MenuAppBar() {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                <MenuItem onClick={handleClose}>My account</MenuItem>
+                                <MenuItem onClick={handleClose}>โปรไฟล์</MenuItem>
+                                <MenuItem onClick={handleClose}>ออกจากระบบ</MenuItem>
                             </Menu>
                         </div>
-                    )}
+                    ) : <FacebookLogin
+                        appId="1076064602954449"
+                        autoLoad={true}
+                        textButton="เข้าสู่ระบบด้วย facebook"
+                        // fields="id,name,email,picture"
+                        callback={responseFacebook} />
+                    }
                 </Toolbar>
             </AppBar>
         </Box>

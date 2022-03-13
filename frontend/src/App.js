@@ -1,7 +1,7 @@
 import React from 'react'
 import mabin from './assets/img/mabin_canny_09.png'
 import ImagePost from './ImagePost';
-import MenuAppBar from './components/appbar'
+import MenuAppBar from './components/MenuAppBar'
 
 function App() {
 
