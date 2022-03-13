@@ -19,6 +19,21 @@ const only_cat_data = {
     }
 }
 
+const authenticated = (req, res, next) => {
+    const auth_header = req.headers['authorization']
+    const token = auth_header && auth_header.split(' ')[1]
+    if (!token) return res.sendStatus(401)
+    jwt.verify(token, TOKEN_SECRET, (err, data) => {
+        if (err) return res.sendStatus(403)
+        req.data = {
+            username: data.name,
+            email: data.email,
+            picture: data.picture
+        }
+        next()
+    })
+}
+
 app.get('/api/data/reactions', (req, res) => {
     let img = req.query.img
     // image not found
@@ -64,8 +79,13 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
         picture: result.data.picture
     }
     let access_token = jwt.sign(data, TOKEN_SECRET, { expiresIn: '3h' })
-    res.send({ access_token, data })
+    res.send({ access_token })
 })
+
+app.get('/api/info', authenticated, (req, res) => {
+    res.send({ data: req.data })
+})
+
 
 app.get('/', (req, res) => {
     res.send('Hello World!')

@@ -6,23 +6,15 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 
 import FacebookLogin from 'react-facebook-login';
 import axios from 'axios';
 
-
 export default function MenuAppBar() {
-    const [auth, setAuth] = React.useState(false);
+    const [auth, setAuth] = React.useState(sessionStorage.getItem('access_token') != null);
     const [anchorEl, setAnchorEl] = React.useState(null);
-
-    const handleChange = (event) => {
-        setAuth(event.target.checked);
-    };
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -32,6 +24,17 @@ export default function MenuAppBar() {
         setAnchorEl(null);
     };
 
+    const handleGetInfo = async () => {
+        let result = await axios.get('http://localhost:5000/api/info')
+        console.log(result.data)
+    }
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('access_token')
+        setAuth(false)
+        handleClose()
+    }
+
     const responseFacebook = async (response) => {
         if (response.accessToken) {
             // console.log('login with accessToken= ' + response.accessToken)
@@ -40,23 +43,12 @@ export default function MenuAppBar() {
             })
             // console.log(result.data)
             sessionStorage.setItem('access_token', result.data.access_token)
+            setAuth(true)
         }
     }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <FormGroup>
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={auth}
-                            onChange={handleChange}
-                            aria-label="login switch"
-                        />
-                    }
-                    label={auth ? 'Logout' : 'Login'}
-                />
-            </FormGroup>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton
@@ -98,13 +90,12 @@ export default function MenuAppBar() {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleClose}>โปรไฟล์</MenuItem>
-                                <MenuItem onClick={handleClose}>ออกจากระบบ</MenuItem>
+                                <MenuItem onClick={handleGetInfo}>โปรไฟล์</MenuItem>
+                                <MenuItem onClick={handleLogout}>ออกจากระบบ</MenuItem>
                             </Menu>
                         </div>
                     ) : <FacebookLogin
                         appId="1076064602954449"
-                        autoLoad={true}
                         textButton="เข้าสู่ระบบด้วย facebook"
                         // fields="id,name,email,picture"
                         callback={responseFacebook} />
