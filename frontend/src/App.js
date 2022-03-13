@@ -1,8 +1,30 @@
 import React from 'react'
-import mabin from './assets/img/mabin_canny_09.png'
-import ImagePost from './ImagePost';
-import MenuAppBar from './components/MenuAppBar'
 import axios from 'axios';
+import MenuAppBar from './components/MenuAppBar'
+import ImagePost from './ImagePost';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import mabin from './assets/img/mabin_canny_09.png'
+
+const theme = createTheme({
+  palette: {
+    white: {
+      main: '#FFFFFF',
+    },
+    primary: {
+      light: '#757ce8',
+      main: '#3f50b5',
+      dark: '#002884',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#eeffff',
+      main: '#bbdefb',
+      dark: '#8aacc8',
+      contrastText: '#000',
+    },
+  },
+});
 
 axios.interceptors.request.use(function (config) {
   const token = sessionStorage.getItem('access_token')
@@ -15,10 +37,10 @@ axios.interceptors.request.use(function (config) {
 function App() {
 
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <MenuAppBar />
       <ImagePost img="mabin_canny_stage_09" url={mabin} />
-    </div>
+    </ThemeProvider>
   );
 }
 

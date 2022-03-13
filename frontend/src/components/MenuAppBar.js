@@ -5,11 +5,12 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import Button from '@mui/material/Button';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 
-import FacebookLogin from 'react-facebook-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
 
 export default function MenuAppBar() {
@@ -74,6 +75,17 @@ export default function MenuAppBar() {
                                 color="inherit"
                             >
                                 <AccountCircle />
+                                {/* <Box
+                                    component="img"
+                                    sx={{
+                                        height: 233,
+                                        width: 350,
+                                        maxHeight: { xs: 233, md: 167 },
+                                        maxWidth: { xs: 350, md: 250 },
+                                    }}
+                                    alt="The house from the offer."
+                                    src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2"
+                                /> */}
                             </IconButton>
                             <Menu
                                 id="menu-appbar"
@@ -96,9 +108,11 @@ export default function MenuAppBar() {
                         </div>
                     ) : <FacebookLogin
                         appId="1076064602954449"
-                        textButton="เข้าสู่ระบบด้วย facebook"
-                        // fields="id,name,email,picture"
-                        callback={responseFacebook} />
+                        callback={responseFacebook}
+                        render={renderProps => (
+                            <Button variant="outlined" color="white" onClick={renderProps.onClick}>เข้าสู่ระบบด้วย facebook</Button>
+                        )}
+                    />
                     }
                 </Toolbar>
             </AppBar>
