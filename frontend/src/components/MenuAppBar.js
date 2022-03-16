@@ -16,6 +16,8 @@ import axios from 'axios';
 export default function MenuAppBar() {
     const [auth, setAuth] = React.useState(sessionStorage.getItem('access_token') != null);
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [userImagePath, setuserImagePath] = React.useState("");
+    const [userName, setuserName] = React.useState("");
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -30,11 +32,24 @@ export default function MenuAppBar() {
         console.log(result.data)
     }
 
+    const handleSetInfo = async () => {
+        let result = await axios.get('http://localhost:5000/api/info')
+        // console.log(result.data)
+        setuserName(result.data.username)
+        setuserImagePath(result.data.picture.data.url)
+    }
+
     const handleLogout = () => {
         sessionStorage.removeItem('access_token')
         setAuth(false)
         handleClose()
     }
+
+    React.useEffect(() => {
+        if (auth) {
+            handleSetInfo()
+        }
+    }, [auth])
 
     const responseFacebook = async (response) => {
         if (response.accessToken) {
@@ -67,31 +82,34 @@ export default function MenuAppBar() {
                     {auth ? (
                         <div>
                             <IconButton
-                                size="large"
+                                size="small"
                                 aria-label="account of current user"
                                 aria-controls="menu-appbar"
                                 aria-haspopup="true"
                                 onClick={handleMenu}
                                 color="inherit"
                             >
-                                <AccountCircle />
-                                {/* <Box
+                                <Box
+                                    px={2}
                                     component="img"
                                     sx={{
-                                        height: 233,
-                                        width: 350,
+                                        height: 50,
+                                        width: 50,
                                         maxHeight: { xs: 233, md: 167 },
                                         maxWidth: { xs: 350, md: 250 },
                                     }}
-                                    alt="The house from the offer."
-                                    src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&w=350&dpr=2"
-                                /> */}
+                                    alt="user profile picture"
+                                    src={userImagePath}
+                                />
+                                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} >
+                                    {userName}
+                                </Typography>
                             </IconButton>
                             <Menu
                                 id="menu-appbar"
                                 anchorEl={anchorEl}
                                 anchorOrigin={{
-                                    vertical: 'top',
+                                    vertical: 'bottom',
                                     horizontal: 'right',
                                 }}
                                 keepMounted
@@ -102,8 +120,8 @@ export default function MenuAppBar() {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleGetInfo}>โปรไฟล์</MenuItem>
-                                <MenuItem onClick={handleLogout}>ออกจากระบบ</MenuItem>
+                                <MenuItem onClick={handleGetInfo} style={{ width: 200 }}>โปรไฟล์</MenuItem>
+                                <MenuItem onClick={handleLogout} style={{ width: 200 }}>ออกจากระบบ</MenuItem>
                             </Menu>
                         </div>
                     ) : <FacebookLogin
@@ -115,7 +133,7 @@ export default function MenuAppBar() {
                     />
                     }
                 </Toolbar>
-            </AppBar>
-        </Box>
+            </AppBar >
+        </Box >
     );
 }

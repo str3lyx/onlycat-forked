@@ -26,7 +26,7 @@ const authenticated = (req, res, next) => {
     jwt.verify(token, TOKEN_SECRET, (err, data) => {
         if (err) return res.sendStatus(403)
         req.data = {
-            username: data.name,
+            username: data.username,
             email: data.email,
             picture: data.picture
         }
@@ -68,7 +68,6 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
             access_token: token
         }
     })
-    // console.log(result.data)
     if (!result.data.id) {
         res.sendStatus(403)
         return
@@ -83,7 +82,7 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
 })
 
 app.get('/api/info', authenticated, (req, res) => {
-    res.send({ data: req.data })
+    res.send(req.data)
 })
 
 
