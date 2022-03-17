@@ -10,6 +10,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import Avatar from '@mui/material/Avatar';
+import UploadIcon from '@mui/icons-material/Upload';
+import Tooltip from '@mui/material/Tooltip'
 
 
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
@@ -81,6 +83,17 @@ export default function MenuAppBar() {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Only Cat
                     </Typography>
+                    <Tooltip title="Upload">
+                        <IconButton
+                            size="small"
+                            aria-label="upload cat image here"
+                            aria-haspopup="false"
+                            color="inherit"
+                            sx={{mx: 1}}
+                        >
+                            <UploadIcon />
+                        </IconButton>
+                    </Tooltip>
                     {auth ? (
                         <div>
                             <IconButton
@@ -95,7 +108,8 @@ export default function MenuAppBar() {
                                     alt={userName}
                                     src={userImagePath}
                                     sx={{ width: 50, height: 50, mx: 1 }}
-                                >{userName[0]} {/* สำหรับเมื่อไม่สามารถโหลดรูปได้ */}
+                                >
+                                    {userName[0]} {/* สำหรับเมื่อไม่สามารถโหลดรูปได้ */}
                                 </Avatar>
                                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} >
                                     {userName}
