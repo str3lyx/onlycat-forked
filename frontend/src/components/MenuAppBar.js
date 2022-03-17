@@ -125,7 +125,7 @@ export default function MenuAppBar() {
                             </Menu>
                         </div>
                     ) : <FacebookLogin
-                        appId="1076064602954449"
+                        appId={process.env.REACT_APP_FACEBOOK_APP_ID}
                         callback={responseFacebook}
                         render={renderProps => (
                             <Button variant="outlined" color="white" onClick={renderProps.onClick}>เข้าสู่ระบบด้วย facebook</Button>
