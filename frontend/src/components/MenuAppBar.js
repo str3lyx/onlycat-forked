@@ -6,9 +6,11 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
+import Avatar from '@mui/material/Avatar';
+
 
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
@@ -89,18 +91,12 @@ export default function MenuAppBar() {
                                 onClick={handleMenu}
                                 color="inherit"
                             >
-                                <Box
-                                    px={2}
-                                    component="img"
-                                    sx={{
-                                        height: 50,
-                                        width: 50,
-                                        maxHeight: { xs: 233, md: 167 },
-                                        maxWidth: { xs: 350, md: 250 },
-                                    }}
-                                    alt="user profile picture"
+                                <Avatar
+                                    alt={userName}
                                     src={userImagePath}
-                                />
+                                    sx={{ width: 50, height: 50, mx: 1 }}
+                                >{userName[0]} {/* สำหรับเมื่อไม่สามารถโหลดรูปได้ */}
+                                </Avatar>
                                 <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} >
                                     {userName}
                                 </Typography>
@@ -127,8 +123,9 @@ export default function MenuAppBar() {
                     ) : <FacebookLogin
                         appId={process.env.REACT_APP_FACEBOOK_APP_ID}
                         callback={responseFacebook}
-                        render={renderProps => (
-                            <Button variant="outlined" color="white" onClick={renderProps.onClick}>เข้าสู่ระบบด้วย facebook</Button>
+                        render={renderProps => (<Button variant="outlined" color="white" onClick={renderProps.onClick}>
+                            <FacebookRoundedIcon sx={{ mr: 1 }} /> เข้าสู่ระบบด้วย Facebook
+                        </Button>
                         )}
                     />
                     }

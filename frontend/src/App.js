@@ -24,6 +24,11 @@ const theme = createTheme({
       contrastText: '#000',
     },
   },
+  typography: {
+    button: {
+      textTransform: 'none' // แก้ตัวอักษรถูก render เป็นพิมพ์ใหญ่เอง
+    }
+  }
 });
 
 axios.interceptors.request.use(function (config) {
