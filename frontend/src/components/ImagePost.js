@@ -3,6 +3,7 @@ const axios = require('axios')
 
 function ImagePost(props)
 {
+  const [imgUrl, setImgUrl] = React.useState('')
   const [reaction, setReaction] = React.useState({ like: 0, dislike: 0 })
 
   React.useEffect(() => {
@@ -32,7 +33,13 @@ function ImagePost(props)
   }
 
   const updateData = () => {
-    console.log(props.img)
+    axios.get(`http://localhost:5000/api/data?img=${props.img}`)
+      .then((res) => {
+        console.log(res)
+        setImgUrl(res.data.img)
+      })
+      .catch((err) => {})
+    
     axios.get(`http://localhost:5000/api/data/reactions?img=${props.img}`)
       .then((res) => {
         setReaction(res.data)
@@ -44,7 +51,7 @@ function ImagePost(props)
 
   return (
     <div>
-      <img src={props.url} alt="" />
+      <img src={imgUrl} alt="" />
       <div>
         <button onClick={onBtnLike_click}>Like: {reaction.like}</button>
         <button onClick={onBtnDislike_click}>Dislike: {reaction.dislike}</button>

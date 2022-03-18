@@ -1,6 +1,5 @@
 import * as React from 'react'
 import ImagePost from './ImagePost'
-import mabin from '../assets/img/mabin_canny_09.png'
 import Box from '@mui/material/Box'
 
 const axios = require('axios')
@@ -22,7 +21,7 @@ function ImageBoard()
       m='auto'
     >
     {
-      data.map(img_name => <ImagePost key={img_name} img={img_name} url={mabin}/>)
+      data.map(img_name => <ImagePost key={img_name} img={img_name}/>)
     }
     </Box>
   )

@@ -3,7 +3,6 @@ import axios from 'axios';
 import MenuAppBar from './components/MenuAppBar'
 import ImageBoard from './components/ImageBoard';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Box from '@mui/material/Box'
 
 const theme = createTheme({
   palette: {

@@ -6,13 +6,14 @@ const jwt = require('jsonwebtoken')
 // this secret only use for development use(require('crypto').randomBytes(64).toString('hex'))
 const TOKEN_SECRET = 'this-is-my-secret-for-development'
 const app = express()
-const port = 5000
+const port = process.env['SERVER_PORT'] || 5000
 
 app.use(cors())
+app.use('/img', express.static('public'))
 
 const only_cat_data = {
     'mabin_canny_stage_09': {
-        img: '',
+        img: 'http://localhost:5000/img/mabin_canny_09.png',
         author: '',
         caption: '',
         date: '',
@@ -23,7 +24,7 @@ const only_cat_data = {
         }
     },
     'mabin_canny_stage_08': {
-        img: '',
+        img: 'http://localhost:5000/img/mabin_canny_09.png',
         author: '',
         caption: '',
         date: '',
@@ -51,7 +52,10 @@ const authenticated = (req, res, next) => {
 }
 
 app.get('/api/data', (req, res) => {
-    res.send(JSON.stringify(Object.keys(only_cat_data)))
+    if(Object.keys(only_cat_data).find(data => data === req.query.img))
+        res.send(JSON.stringify(only_cat_data[req.query.img]))
+    else
+        res.send(JSON.stringify(Object.keys(only_cat_data)))
 })
 
 app.get('/api/data/reactions', (req, res) => {
