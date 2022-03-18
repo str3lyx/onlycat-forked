@@ -1,10 +1,9 @@
-import React from 'react'
+import * as React from 'react'
 import axios from 'axios';
 import MenuAppBar from './components/MenuAppBar'
-import ImagePost from './ImagePost';
+import ImageBoard from './components/ImageBoard';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-import mabin from './assets/img/mabin_canny_09.png'
+import Box from '@mui/material/Box'
 
 const theme = createTheme({
   palette: {
@@ -44,7 +43,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <MenuAppBar />
-      <ImagePost img="mabin_canny_stage_09" url={mabin} />
+      <ImageBoard />
     </ThemeProvider>
   );
 }

@@ -12,6 +12,22 @@ app.use(cors())
 
 const only_cat_data = {
     'mabin_canny_stage_09': {
+        img: '',
+        author: '',
+        caption: '',
+        date: '',
+        tags: [],
+        reaction: {
+            like: 0,
+            dislike: 0
+        }
+    },
+    'mabin_canny_stage_08': {
+        img: '',
+        author: '',
+        caption: '',
+        date: '',
+        tags: [],
         reaction: {
             like: 0,
             dislike: 0
@@ -33,6 +49,10 @@ const authenticated = (req, res, next) => {
         next()
     })
 }
+
+app.get('/api/data', (req, res) => {
+    res.send(JSON.stringify(Object.keys(only_cat_data)))
+})
 
 app.get('/api/data/reactions', (req, res) => {
     let img = req.query.img
@@ -83,11 +103,6 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
 
 app.get('/api/info', authenticated, (req, res) => {
     res.send(req.data)
-})
-
-
-app.get('/', (req, res) => {
-    res.send('Hello World!')
 })
 
 app.listen(port, () => {

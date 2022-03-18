@@ -1,9 +1,13 @@
-import React, {useState, useEffect} from 'react'
+import * as React from 'react'
 const axios = require('axios')
 
 function ImagePost(props)
 {
-  const [reaction, setReaction] = useState({ like: 0, dislike: 0 })
+  const [reaction, setReaction] = React.useState({ like: 0, dislike: 0 })
+
+  React.useEffect(() => {
+    updateData()
+  }, [])
   
   const onBtnLike_click = (e) => {
     const data = {img: props.img, reaction: {like: 1, dislike: 0}}
@@ -28,6 +32,7 @@ function ImagePost(props)
   }
 
   const updateData = () => {
+    console.log(props.img)
     axios.get(`http://localhost:5000/api/data/reactions?img=${props.img}`)
       .then((res) => {
         setReaction(res.data)
@@ -36,10 +41,6 @@ function ImagePost(props)
         console.error(err)
       })
   }
-
-  useEffect(() => {
-    updateData()
-  })
 
   return (
     <div>
