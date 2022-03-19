@@ -56,7 +56,6 @@ if (process.env.NODE_ENV !== 'production') {
     logger.level = 'debug'
 }
 
-logger.debug('hello')
 const only_cat_data = {
     'mabin_canny_stage_09': {
         img: 'http://localhost:5000/img/mabin_canny_09.png',
