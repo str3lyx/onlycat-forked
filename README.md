@@ -7,7 +7,7 @@
 - [x] Social Authentication  
     - [x] Facebook 
 - [x] ใช้ไลบรารี express ในการทำ Web API 
-- [ ] ใช้ไลบรารี winston ในการ log
+- [x] ใช้ไลบรารี winston ในการ log
 - [ ] มีการบันทึกข้อมูลลงฐานข้อมูล
 ### Frontend 
 พัฒนาฝั่ง Frontend ด้วย React & MUI
