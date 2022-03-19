@@ -13,9 +13,11 @@ const port = process.env['SERVER_PORT'] || 5000
 
 app.use(cors())
 app.use('/img', express.static('public'))
-app.use(expressWinston.logger({ // level info by default
+app.use(expressWinston.logger({ // default level is info
     transports: [
-        new winston.transports.Console()
+        new winston.transports.Console({
+            level: 'info'
+        })
     ],
     format: winston.format.combine(
         winston.format.colorize(),
@@ -33,6 +35,28 @@ app.use(expressWinston.logger({ // level info by default
     ignoreRoute: function (req, res) { return false; }
 }));
 
+const logger = winston.createLogger({
+    level: 'error', // for production
+    format: winston.format.json(),
+    defaultMeta: { service: 'user-service' },
+    transports: [
+        // dont write to file (for now)
+        // new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        // new winston.transports.File({ filename: 'combined.log' }),
+    ],
+});
+
+if (process.env.NODE_ENV !== 'production') {
+    logger.add(new winston.transports.Console({
+        format: winston.format.combine(
+            winston.format.colorize(),
+            winston.format.simple()
+        ),
+    }))
+    logger.level = 'debug'
+}
+
+logger.debug('hello')
 const only_cat_data = {
     'mabin_canny_stage_09': {
         img: 'http://localhost:5000/img/mabin_canny_09.png',
