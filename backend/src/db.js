@@ -1,14 +1,15 @@
 
 const mongoose = require('mongoose');
 const config = require('../config');
+const { logger } = require('./logger');
 
 const { DB: { host, port, name } } = config;
 const connection_uri = `mongodb://${host}:${port}/${name}`;
 mongoose.connect(connection_uri, function (error) {
     if (error) {
-        console.log('mongodb error')
+        console.error('mongodb connect error')
     } else {
-        console.log('mongodb connected')
+        logger.debug('mongodb connected')
     }
 });
 

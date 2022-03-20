@@ -3,10 +3,9 @@ const bodyParser = require('body-parser')
 const axios = require('axios')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
-const winston = require('winston');
-const expressWinston = require('express-winston');
 
 const config = require('../config');
+const { expressLogger, logger } = require('./logger')
 const mongoose = require('./db')
 
 // this secret only use for development use(require('crypto').randomBytes(64).toString('hex'))
@@ -16,48 +15,7 @@ const port = process.env['SERVER_PORT'] || 5000
 
 app.use(cors())
 app.use('/img', express.static('public'))
-app.use(expressWinston.logger({ // default level is info
-    transports: [
-        new winston.transports.Console({
-            level: 'info'
-        })
-    ],
-    format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple(),
-        winston.format.timestamp({
-            format: 'YYYY-MM-DD HH:mm:ss'
-        }),
-        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
-    ),
-    // format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
-    meta: false,
-    msg: "Express {{res.statusCode}} {{req.method}} {{res.responseTime}}ms {{req.url}}",
-    // expressFormat: true, // override all msg, if true above config "msg" wont work
-    colorize: true,
-    ignoreRoute: function (req, res) { return false; }
-}));
-
-const logger = winston.createLogger({
-    level: 'error', // for production
-    format: winston.format.json(),
-    // defaultMeta: { service: 'user-service' },
-    transports: [
-        // dont write to file (for now)
-        // new winston.transports.File({ filename: 'error.log', level: 'error' }),
-        // new winston.transports.File({ filename: 'combined.log' }),
-    ],
-});
-
-if (process.env.NODE_ENV !== 'production') {
-    logger.add(new winston.transports.Console({
-        format: winston.format.combine(
-            winston.format.colorize(),
-            winston.format.simple()
-        ),
-    }))
-    logger.level = 'debug'
-}
+app.use(expressLogger);
 
 const only_cat_data = {
     'mabin_canny_stage_09': {
