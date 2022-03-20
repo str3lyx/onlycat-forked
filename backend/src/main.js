@@ -6,8 +6,11 @@ const jwt = require('jsonwebtoken')
 const winston = require('winston');
 const expressWinston = require('express-winston');
 
+const config = require('../config');
+const mongoose = require('./db')
+
 // this secret only use for development use(require('crypto').randomBytes(64).toString('hex'))
-const TOKEN_SECRET = 'this-is-my-secret-for-development'
+const TOKEN_SECRET = config.TOKEN_SECRET
 const app = express()
 const port = process.env['SERVER_PORT'] || 5000
 
@@ -38,7 +41,7 @@ app.use(expressWinston.logger({ // default level is info
 const logger = winston.createLogger({
     level: 'error', // for production
     format: winston.format.json(),
-    defaultMeta: { service: 'user-service' },
+    // defaultMeta: { service: 'user-service' },
     transports: [
         // dont write to file (for now)
         // new winston.transports.File({ filename: 'error.log', level: 'error' }),

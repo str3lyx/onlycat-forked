@@ -1,0 +1,9 @@
+module.exports = {
+    DB: {
+        host: 'localhost',
+        port: 27017,
+        name: 'only-cat'
+    },
+    TOKEN_SECRET: "this-is-my-secret-for-development"
+};
+
