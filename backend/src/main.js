@@ -4,6 +4,7 @@ const axios = require('axios')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
 
+const crypto = require('crypto')
 const config = require('../config');
 const { expressLogger, logger } = require('./logger')
 const mongoose = require('./db')
@@ -42,16 +43,31 @@ const only_cat_data = {
     }
 }
 
+const users = {
+    placeholder : {
+        name: '',
+        picture: '',
+        date: '',
+        account: {
+            facebook: ''
+        },
+        reaction : {
+            like: [],
+            dislike: []
+        },
+        upload: []
+    }
+}
+
 const authenticated = (req, res, next) => {
     const auth_header = req.headers['authorization']
     const token = auth_header && auth_header.split(' ')[1]
     if (!token) return res.sendStatus(401)
     jwt.verify(token, TOKEN_SECRET, (err, data) => {
         if (err) return res.sendStatus(403)
+
         req.data = {
-            username: data.username,
-            email: data.email,
-            picture: data.picture
+            id: data.id
         }
         next()
     })
@@ -98,23 +114,62 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
             access_token: token
         }
     })
+    
     if (!result.data.id) {
         res.sendStatus(403)
         return
     }
+    
+    // found user data
     let data = {
+        id: result.data.id,
         username: result.data.name,
         email: result.data.email,
-        picture: result.data.picture
+        picture: result.data.picture,
+        date: new Date()
     }
-    let access_token = jwt.sign(data, TOKEN_SECRET, { expiresIn: '3h' })
+
+    // check data in database
+    let index = isUserRegistered(data.id, 'facebook')
+    if(index == null)
+    {
+        let name = crypto.createHash('sha256').update(JSON.stringify(data)).digest('base64')
+        users[name] = {
+            name: data.username,
+            picture: data.picture,
+            date: data.date,
+            account: {
+                facebook: data.id
+            },
+            reaction : {
+                like: [],
+                dislike: []
+            },
+            upload: []
+        }
+        index = name
+    }
+
+    let access_token = jwt.sign({id: index}, TOKEN_SECRET, { expiresIn: '3h' })
     res.send({ access_token })
 })
 
 app.get('/api/info', authenticated, (req, res) => {
-    res.send(req.data)
+    res.send(users[req.data.id])
 })
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
+
+// ----------------------------- utils ----------------------------------------- //
+
+function isUserRegistered(acc_id, tag)
+{
+    for(let index in users)
+    {
+        if(users[index].account[tag] === acc_id)
+            return Object.keys(users)[index]
+    }
+    return null
+}

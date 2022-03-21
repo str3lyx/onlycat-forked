@@ -11,6 +11,12 @@ function ImagePost(props)
   }, [])
   
   const onBtnLike_click = (e) => {
+    if(sessionStorage.getItem('access_token') == null)
+    {
+      alert('คุณยังไม่ได้ login')
+      return
+    }
+    console.log(props.user)
     const data = {img: props.img, reaction: {like: 1, dislike: 0}}
     axios.post('http://localhost:5000/api/react', data)
       .then((res) => {
@@ -22,6 +28,11 @@ function ImagePost(props)
   }
 
   const onBtnDislike_click = (e) => {
+    if(sessionStorage.getItem('access_token') == null)
+    {
+      alert('คุณยังไม่ได้ login')
+      return
+    }
     const data = {img: props.img, reaction: {like: 0, dislike: 1}}
     axios.post('http://localhost:5000/api/react', data)
       .then((res) => {

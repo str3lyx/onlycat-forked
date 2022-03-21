@@ -4,11 +4,11 @@ import Box from '@mui/material/Box'
 
 const axios = require('axios')
 
-function ImageBoard()
+function ImageBoard(props)
 {
   const [data, setData] = React.useState([])
 
-  React.useEffect( async () => {
+  React.useEffect(() => {
     axios.get('http://localhost:5000/api/data')
         .then((res) => {
           setData(res.data)
@@ -21,7 +21,7 @@ function ImageBoard()
       m='auto'
     >
     {
-      data.map(img_name => <ImagePost key={img_name} img={img_name}/>)
+      data.map(img_name => <ImagePost key={img_name} img={img_name} user={props.user}/>)
     }
     </Box>
   )

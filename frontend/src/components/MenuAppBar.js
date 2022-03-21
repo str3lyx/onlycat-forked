@@ -17,7 +17,7 @@ import Tooltip from '@mui/material/Tooltip'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
 
-export default function MenuAppBar() {
+export default function MenuAppBar(props) {
     const [auth, setAuth] = React.useState(sessionStorage.getItem('access_token') != null);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [userImagePath, setuserImagePath] = React.useState("");
@@ -39,7 +39,8 @@ export default function MenuAppBar() {
     const handleSetInfo = async () => {
         let result = await axios.get('http://localhost:5000/api/info')
         // console.log(result.data)
-        setuserName(result.data.username)
+        props.userData(result.data)
+        setuserName(result.data.name)
         setuserImagePath(result.data.picture.data.url)
     }
 
@@ -83,19 +84,19 @@ export default function MenuAppBar() {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Only Cat
                     </Typography>
-                    <Tooltip title="Upload">
-                        <IconButton
-                            size="small"
-                            aria-label="upload cat image here"
-                            aria-haspopup="false"
-                            color="inherit"
-                            sx={{mx: 1}}
-                        >
-                            <UploadIcon />
-                        </IconButton>
-                    </Tooltip>
                     {auth ? (
-                        <div>
+                        <>
+                            <Tooltip title="Upload">
+                                <IconButton
+                                    size="small"
+                                    aria-label="upload cat image here"
+                                    aria-haspopup="false"
+                                    color="inherit"
+                                    sx={{mx: 1}}
+                                >
+                                    <UploadIcon />
+                                </IconButton>
+                            </Tooltip>
                             <IconButton
                                 size="small"
                                 aria-label="account of current user"
@@ -133,7 +134,7 @@ export default function MenuAppBar() {
                                 <MenuItem onClick={handleGetInfo} style={{ width: 200 }}>โปรไฟล์</MenuItem>
                                 <MenuItem onClick={handleLogout} style={{ width: 200 }}>ออกจากระบบ</MenuItem>
                             </Menu>
-                        </div>
+                        </>
                     ) : <FacebookLogin
                         appId={process.env['REACT_APP_FACEBOOK_APP_ID']}
                         callback={responseFacebook}
