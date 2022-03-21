@@ -21,13 +21,13 @@ app.use(expressLogger);
 const only_cat_data = {
     'mabin_canny_stage_09': {
         img: 'http://localhost:5000/img/mabin_canny_09.png',
-        author: '',
-        caption: '',
-        date: '',
-        tags: [],
+        author: 'Mabin',
+        caption: 'test #rrr#',
+        date: new Date(),
+        tags: ['rrr'],
         reaction: {
-            like: 0,
-            dislike: 0
+            like: [],
+            dislike: []
         }
     },
     'mabin_canny_stage_08': {
@@ -37,8 +37,8 @@ const only_cat_data = {
         date: '',
         tags: [],
         reaction: {
-            like: 0,
-            dislike: 0
+            like: [],
+            dislike: []
         }
     }
 }
@@ -92,7 +92,7 @@ app.get('/api/data/reactions', (req, res) => {
     console.log(only_cat_data[img].reaction)
 })
 
-app.post('/api/react', bodyParser.json(), (req, res) => {
+app.post('/api/react', [authenticated, bodyParser.json()], (req, res) => {
     let img = req.body.img
     let reaction = req.body.reaction
     // image not found
@@ -100,8 +100,37 @@ app.post('/api/react', bodyParser.json(), (req, res) => {
         res.sendStatus(404)
         return
     }
-    only_cat_data[img].reaction.like += reaction.like
-    only_cat_data[img].reaction.dislike += reaction.dislike
+
+    let id = req.data.id
+    // handle like and dislike of image
+    for(let key of Object.keys(only_cat_data[img].reaction))
+    {
+        let index = only_cat_data[img].reaction[key].findIndex(uid => uid == id)
+        if(key != reaction)
+        {
+            if(index >= 0) only_cat_data[img].reaction[key].splice(index, 1)
+        }
+        else
+        {
+            if(index >= 0) only_cat_data[img].reaction[key].splice(index, 1)
+            else only_cat_data[img].reaction[key].push(id)
+        }
+    }
+
+    // handle user like and dislike record
+    for(let key of Object.keys(users[id].reaction))
+    {
+        let index = users[id].reaction[key].findIndex(ina => ina == img)
+        if(key != reaction)
+        {
+            if(index >= 0) users[id].reaction[key].splice(index, 1)
+        }
+        else
+        {
+            if(index >= 0) users[id].reaction[key].splice(index, 1)
+            else users[id].reaction[key].push(img)
+        }
+    }
     console.log(only_cat_data)
     res.sendStatus(200)
 })

@@ -17,7 +17,7 @@ function ImagePost(props)
       return
     }
     console.log(props.user)
-    const data = {img: props.img, reaction: {like: 1, dislike: 0}}
+    const data = {img: props.img, reaction: 'like'}
     axios.post('http://localhost:5000/api/react', data)
       .then((res) => {
         updateData()
@@ -33,7 +33,7 @@ function ImagePost(props)
       alert('คุณยังไม่ได้ login')
       return
     }
-    const data = {img: props.img, reaction: {like: 0, dislike: 1}}
+    const data = {img: props.img, reaction: 'dislike'}
     axios.post('http://localhost:5000/api/react', data)
       .then((res) => {
         updateData()
@@ -64,8 +64,8 @@ function ImagePost(props)
     <div>
       <img src={imgUrl} alt="" />
       <div>
-        <button onClick={onBtnLike_click}>Like: {reaction.like}</button>
-        <button onClick={onBtnDislike_click}>Dislike: {reaction.dislike}</button>
+        <button onClick={onBtnLike_click}>Like: {reaction.like.length}</button>
+        <button onClick={onBtnDislike_click}>Dislike: {reaction.dislike.length}</button>
       </div>
     </div>
   )
