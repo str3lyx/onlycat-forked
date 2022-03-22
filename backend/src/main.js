@@ -21,7 +21,7 @@ app.use(expressLogger);
 const only_cat_data = {
     'mabin_canny_stage_09': {
         img: 'http://localhost:5000/img/mabin_canny_09.png',
-        author: 'Mabin',
+        author: 'placeholder',
         caption: 'test #rrr#',
         date: new Date(),
         tags: ['rrr'],
@@ -45,8 +45,8 @@ const only_cat_data = {
 
 const users = {
     placeholder : {
-        name: '',
-        picture: '',
+        name: 'MABIN',
+        picture: 'http://localhost:5000/img/mabin_canny_09.png',
         date: '',
         account: {
             facebook: ''
@@ -76,6 +76,8 @@ const authenticated = (req, res, next) => {
 app.get('/api/data', (req, res) => {
     if (Object.keys(only_cat_data).find(data => data === req.query.img))
         res.send(JSON.stringify(only_cat_data[req.query.img]))
+    else if(Object.keys(users).find(data => data === req.query.user))
+        res.send(JSON.stringify(users[req.query.user]))
     else
         res.send(JSON.stringify(Object.keys(only_cat_data)))
 })
