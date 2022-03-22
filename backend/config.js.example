@@ -1,9 +1,10 @@
 module.exports = {
     DB: {
-        host: 'localhost',
+        host: 'localhost', # 'mongodb' for production
         port: 27017,
         name: 'only-cat'
     },
+    URL: 'http://localhost:5000',
     TOKEN_SECRET: "this-is-my-secret-for-development"
 };
 

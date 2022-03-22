@@ -13,4 +13,4 @@ mongoose.connect(connection_uri, function (error) {
     }
 });
 
-module.exports = mongoose;
+module.exports = {};
