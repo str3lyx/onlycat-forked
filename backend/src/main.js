@@ -21,10 +21,9 @@ app.use(expressLogger);
 const only_cat_data = {
     'mabin_canny_stage_09': {
         img: 'http://localhost:5000/img/mabin_canny_09.png',
-        author: 'Mabin',
+        author: 'placeholder',
         caption: 'test #rrr#',
         date: new Date(),
-        tags: ['rrr'],
         reaction: {
             like: [],
             dislike: []
@@ -33,9 +32,8 @@ const only_cat_data = {
     'mabin_canny_stage_08': {
         img: 'http://localhost:5000/img/mabin_canny_09.png',
         author: '',
-        caption: '',
+        caption: 'test',
         date: '',
-        tags: [],
         reaction: {
             like: [],
             dislike: []
@@ -44,9 +42,10 @@ const only_cat_data = {
 }
 
 const users = {
-    placeholder: {
-        name: '',
-        picture: '',
+    placeholder : {
+        name: 'MABIN',
+        picture: 'http://localhost:5000/img/mabin_canny_09.png',
+        email: '',
         date: '',
         account: {
             facebook: ''
@@ -76,20 +75,10 @@ const authenticated = (req, res, next) => {
 app.get('/api/data', (req, res) => {
     if (Object.keys(only_cat_data).find(data => data === req.query.img))
         res.send(JSON.stringify(only_cat_data[req.query.img]))
+    else if(Object.keys(users).find(data => data === req.query.user))
+        res.send(JSON.stringify(users[req.query.user]))
     else
         res.send(JSON.stringify(Object.keys(only_cat_data)))
-})
-
-app.get('/api/data/reactions', (req, res) => {
-    let img = req.query.img
-    // image not found
-    if (!only_cat_data[img]) {
-        res.sendStatus(404)
-        return
-    }
-    // send json of reaction of the target image
-    res.send(JSON.stringify(only_cat_data[img].reaction))
-    console.log(only_cat_data[img].reaction)
 })
 
 app.post('/api/react', [authenticated, bodyParser.json()], (req, res) => {

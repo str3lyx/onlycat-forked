@@ -1,6 +1,6 @@
 import * as React from 'react'
 import ImagePost from './ImagePost'
-import Box from '@mui/material/Box'
+import {Grid} from '@mui/material'
 
 const axios = require('axios')
 
@@ -16,14 +16,20 @@ function ImageBoard(props)
   }, [])
 
   return (
-    <Box 
+    <Grid container spacing={2}
       sx={{bgcolor: '#000000', width: '90%', padding: '20px', boxSizing: 'border-box'}}
       m='auto'
     >
     {
-      data.map(img_name => <ImagePost key={img_name} img={img_name} user={props.user}/>)
+      data.map((img_name) => {
+        return (
+        <Grid item xs={3}>
+          <ImagePost key={img_name} img={img_name} user={props.user}/>
+        </Grid>
+        )
+      })
     }
-    </Box>
+    </Grid>
   )
 }
 
