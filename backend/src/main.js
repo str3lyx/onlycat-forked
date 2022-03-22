@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 const config = require('../config');
 const { expressLogger, logger } = require('./logger')
-const mongoose = require('./db')
+const models = require('./db')
 
 // this secret only use for development use(require('crypto').randomBytes(64).toString('hex'))
 const TOKEN_SECRET = config.TOKEN_SECRET
@@ -51,7 +51,7 @@ const users = {
         account: {
             facebook: ''
         },
-        reaction : {
+        reaction: {
             like: [],
             dislike: []
         },
@@ -105,31 +105,25 @@ app.post('/api/react', [authenticated, bodyParser.json()], (req, res) => {
 
     let id = req.data.id
     // handle like and dislike of image
-    for(let key of Object.keys(only_cat_data[img].reaction))
-    {
+    for (let key of Object.keys(only_cat_data[img].reaction)) {
         let index = only_cat_data[img].reaction[key].findIndex(uid => uid == id)
-        if(key != reaction)
-        {
-            if(index >= 0) only_cat_data[img].reaction[key].splice(index, 1)
+        if (key != reaction) {
+            if (index >= 0) only_cat_data[img].reaction[key].splice(index, 1)
         }
-        else
-        {
-            if(index >= 0) only_cat_data[img].reaction[key].splice(index, 1)
+        else {
+            if (index >= 0) only_cat_data[img].reaction[key].splice(index, 1)
             else only_cat_data[img].reaction[key].push(id)
         }
     }
 
     // handle user like and dislike record
-    for(let key of Object.keys(users[id].reaction))
-    {
+    for (let key of Object.keys(users[id].reaction)) {
         let index = users[id].reaction[key].findIndex(ina => ina == img)
-        if(key != reaction)
-        {
-            if(index >= 0) users[id].reaction[key].splice(index, 1)
+        if (key != reaction) {
+            if (index >= 0) users[id].reaction[key].splice(index, 1)
         }
-        else
-        {
-            if(index >= 0) users[id].reaction[key].splice(index, 1)
+        else {
+            if (index >= 0) users[id].reaction[key].splice(index, 1)
             else users[id].reaction[key].push(img)
         }
     }
@@ -145,12 +139,12 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
             access_token: token
         }
     })
-    
+
     if (!result.data.id) {
         res.sendStatus(403)
         return
     }
-    
+
     // found user data
     let data = {
         id: result.data.id,
@@ -162,8 +156,7 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
 
     // check data in database
     let index = isUserRegistered(data.id, 'facebook')
-    if(index == null)
-    {
+    if (index == null) {
         let name = crypto.createHash('sha256').update(JSON.stringify(data)).digest('base64')
         users[name] = {
             name: data.username,
@@ -172,7 +165,7 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
             account: {
                 facebook: data.id
             },
-            reaction : {
+            reaction: {
                 like: [],
                 dislike: []
             },
@@ -181,7 +174,7 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
         index = name
     }
 
-    let access_token = jwt.sign({id: index}, TOKEN_SECRET, { expiresIn: '3h' })
+    let access_token = jwt.sign({ id: index }, TOKEN_SECRET, { expiresIn: '3h' })
     res.send({ access_token })
 })
 
@@ -195,11 +188,9 @@ app.listen(port, () => {
 
 // ----------------------------- utils ----------------------------------------- //
 
-function isUserRegistered(acc_id, tag)
-{
-    for(let index in users)
-    {
-        if(users[index].account[tag] === acc_id)
+function isUserRegistered(acc_id, tag) {
+    for (let index in users) {
+        if (users[index].account[tag] === acc_id)
             return Object.keys(users)[index]
     }
     return null

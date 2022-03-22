@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    container_name: onlycat-backend
+    restart: always
+    ports:
+      - 5000:5000
+    volumes:
+      - ./backend:/app
+      # - SERVER_PORT=8000  # if enable this you also have to expose ports
+    depends_on:
+      - mongodb
+    networks:
+      - onlycat
+    command: node src/main.js
+
+  mongodb:
+    image: mongo
+    container_name: onlycat-mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - onlycat
+
+volumes:
+  mongodb:
+  mongodb_config:
+
+networks:
+  onlycat:
+    driver: bridge # default
