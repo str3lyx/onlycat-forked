@@ -35,7 +35,6 @@ const only_cat_data = {
         author: '',
         caption: '',
         date: '',
-        tags: [],
         reaction: {
             like: [],
             dislike: []
@@ -47,6 +46,7 @@ const users = {
     placeholder : {
         name: 'MABIN',
         picture: 'http://localhost:5000/img/mabin_canny_09.png',
+        email: '',
         date: '',
         account: {
             facebook: ''
@@ -80,18 +80,6 @@ app.get('/api/data', (req, res) => {
         res.send(JSON.stringify(users[req.query.user]))
     else
         res.send(JSON.stringify(Object.keys(only_cat_data)))
-})
-
-app.get('/api/data/reactions', (req, res) => {
-    let img = req.query.img
-    // image not found
-    if (!only_cat_data[img]) {
-        res.sendStatus(404)
-        return
-    }
-    // send json of reaction of the target image
-    res.send(JSON.stringify(only_cat_data[img].reaction))
-    console.log(only_cat_data[img].reaction)
 })
 
 app.post('/api/react', [authenticated, bodyParser.json()], (req, res) => {

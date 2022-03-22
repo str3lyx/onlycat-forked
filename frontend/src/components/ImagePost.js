@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { Typography, Avatar, Button, Box } from '@mui/material'
+import { Typography, Avatar, Button, Box, Grid } from '@mui/material'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import '../css/utils.css'
 const axios = require('axios')
 
 function ImagePost(props)
@@ -49,69 +48,80 @@ function ImagePost(props)
   }
 
   return (
-    <Box component="span">
-      <Box
-        component="div"
-        sx={{display: 'flex'}}
-      >
-        {userData ? <>
-          <Avatar
-            alt={userData.name}
-            src={userData.picture}
-          >
-            {userData.picture === '' ? userData.name[0] : ''}
-          </Avatar>
-          <Box component="div" mx={1}>
-            <Typography
-              sx={{color: '#ffffff'}}
+    <Box mx={0} my={0} sx={{borderRadius: '12px', backgroundColor: '#3d3d3d'}}>
+        {userData ?
+        <Grid container width="100%" px={1} spacing={1} marginBottom={1}>
+          <Grid item xs={2} sx={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <Avatar
+              alt={userData.name}
+              src={userData.picture}
             >
-              {userData.name}
-            </Typography>
-            <Typography
-              sx={{color: '#cecece'}}
-            >
-              {imgData.date}
-            </Typography>
-          </Box>
-        </> : ''}
-      </Box>
-      <Typography
-        sx={{color: '#FFFFFF'}}
-      >
-        {imgData ? imgData.caption : ''}
-      </Typography>
+              {userData.picture === '' ? userData.name[0] : ''}
+            </Avatar>
+          </Grid>
+          <Grid item xs={10} sx={{display:'flex',alignItems:'center'}}>
+            <Box component="div">
+              <Typography
+                sx={{color: '#ffffff', fontWeight: 600}}
+              >
+                {userData.name === '' || !userData.name ? '\u00a0' : userData.name}
+              </Typography>
+              <Typography
+                sx={{color: '#cecece', fontSize: 10}}
+              >
+                {imgData.date === '' || !imgData.date ? '\u00a0' : imgData.date}
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid> : ''}
       <Box
         component="img"
         src={imgData ? imgData.img : ''}
         alt=""
-        sx={{width:'256px', height:'auto'}}
+        sx={{width:'100%', height:'auto'}}
       />
-      <Box component="div" sx={{display: 'flex'}}>
-        <Button
-          onClick={(e) => onBtnReaction_click('like')}
-          sx={{backgroundColor: '#4d4d4d', color: '#ffffff'}}
-          width='auto'
-          mx={0}
-          className='center-content-flex'
-        >
-          <ThumbUpIcon />
-          <Typography mx={1}>
-            {imgData ? imgData.reaction.like.length : 0}
-          </Typography>
-        </Button>
-        <Button
-          onClick={(e) => onBtnReaction_click('dislike')}
-          sx={{backgroundColor: '#4d4d4d', color:'#ffffff'}}
-          width='auto'
-          mx={0}
-          className='center-content-flex'
-        >
-          <ThumbDownIcon />
-          <Typography mx={1}>
-            {imgData ? imgData.reaction.dislike.length : 0}
-          </Typography>
-        </Button>
-      </Box>
+      <Typography
+        sx={{color: '#FFFFFF'}}
+        px={1}
+      >
+        {imgData ? imgData.caption : ''}
+      </Typography>
+      <Grid container>
+        <Grid item xs={6}>
+          <Button
+            onClick={(e) => onBtnReaction_click('like')}
+            sx={{
+              backgroundColor: '#4d4d4d', color: '#ffffff', width: '100%',
+              borderTopLeftRadius: 0, borderTopRightRadius: 0,
+              borderBottomLeftRadius: '12px', borderBottomRightRadius: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}
+            mx={0}
+          >
+            <ThumbUpIcon />
+            <Typography mx={1}>
+              {imgData ? imgData.reaction.like.length : 0}
+            </Typography>
+          </Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Button
+            onClick={(e) => onBtnReaction_click('dislike')}
+            sx={{
+              backgroundColor: '#4d4d4d', color: '#ffffff', width: '100%',
+              borderTopLeftRadius: 0, borderTopRightRadius: 0,
+              borderBottomLeftRadius: 0, borderBottomRightRadius: '12px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}
+            mx={0}
+          >
+            <ThumbDownIcon />
+            <Typography mx={1}>
+              {imgData ? imgData.reaction.dislike.length : 0}
+            </Typography>
+          </Button>
+        </Grid>
+      </Grid>
     </Box>
   )
 }
