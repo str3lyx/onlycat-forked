@@ -20,7 +20,7 @@ app.use(expressLogger);
 
 const only_cat_data = {
     'mabin_canny_stage_09': {
-        img: 'http://localhost:5000/img/mabin_canny_09.png',
+        img: `${config.URL}/img/mabin_canny_09.png`,
         author: 'placeholder',
         caption: 'test #rrr#',
         date: new Date(),
@@ -30,7 +30,7 @@ const only_cat_data = {
         }
     },
     'mabin_canny_stage_08': {
-        img: 'http://localhost:5000/img/mabin_canny_09.png',
+        img: `${config.URL}/img/mabin_canny_09.png`,
         author: '',
         caption: 'test',
         date: '',
@@ -42,9 +42,9 @@ const only_cat_data = {
 }
 
 const users = {
-    placeholder : {
+    placeholder: {
         name: 'MABIN',
-        picture: 'http://localhost:5000/img/mabin_canny_09.png',
+        picture: `${config.URL}/img/mabin_canny_09.png`,
         email: '',
         date: '',
         account: {
@@ -75,7 +75,7 @@ const authenticated = (req, res, next) => {
 app.get('/api/data', (req, res) => {
     if (Object.keys(only_cat_data).find(data => data === req.query.img))
         res.send(JSON.stringify(only_cat_data[req.query.img]))
-    else if(Object.keys(users).find(data => data === req.query.user))
+    else if (Object.keys(users).find(data => data === req.query.user))
         res.send(JSON.stringify(users[req.query.user]))
     else
         res.send(JSON.stringify(Object.keys(only_cat_data)))

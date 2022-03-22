@@ -4,24 +4,22 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 const axios = require('axios')
 
-function ImagePost(props)
-{
+function ImagePost(props) {
   const [userData, setUserData] = React.useState(null)
   const [imgData, setImgData] = React.useState(null)
 
   React.useEffect(() => {
     updateData()
   }, [])
-  
+
   const onBtnReaction_click = (react) => {
-    if(sessionStorage.getItem('access_token') == null)
-    {
+    if (sessionStorage.getItem('access_token') == null) {
       alert('คุณยังไม่ได้ login')
       return
     }
-    var data = {img: props.img, reaction: react}
+    var data = { img: props.img, reaction: react }
     console.log(data)
-    axios.post('http://localhost:5000/api/react', data)
+    axios.post(`${process.env['REACT_APP_BACKEND_URL']}/api/react`, data)
       .then((res) => {
         updateData()
       })
@@ -32,26 +30,26 @@ function ImagePost(props)
 
   const updateData = () => {
     // get image and user data
-    axios.get(`http://localhost:5000/api/data?img=${props.img}`)
-    .then((res) => {
-      console.log(res)
-      setImgData(res.data)
+    axios.get(`${process.env['REACT_APP_BACKEND_URL']}/api/data?img=${props.img}`)
+      .then((res) => {
+        console.log(res)
+        setImgData(res.data)
 
-      // get author's user data
-      axios.get(`http://localhost:5000/api/data?user=${res.data.author}`)
-      .then((res2) => {
-        setUserData(res2.data)
+        // get author's user data
+        axios.get(`${process.env['REACT_APP_BACKEND_URL']}/api/data?user=${res.data.author}`)
+          .then((res2) => {
+            setUserData(res2.data)
+          })
+          .catch((err) => { })
       })
-      .catch((err) => {})
-    })
-    .catch((err) => {})
+      .catch((err) => { })
   }
 
   return (
-    <Box mx={0} my={0} sx={{borderRadius: '12px', backgroundColor: '#3d3d3d'}}>
-        {userData ?
+    <Box mx={0} my={0} sx={{ borderRadius: '12px', backgroundColor: '#3d3d3d' }}>
+      {userData ?
         <Grid container width="100%" px={1} spacing={1} marginBottom={1}>
-          <Grid item xs={2} sx={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+          <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Avatar
               alt={userData.name}
               src={userData.picture}
@@ -59,15 +57,15 @@ function ImagePost(props)
               {userData.picture === '' ? userData.name[0] : ''}
             </Avatar>
           </Grid>
-          <Grid item xs={10} sx={{display:'flex',alignItems:'center'}}>
+          <Grid item xs={10} sx={{ display: 'flex', alignItems: 'center' }}>
             <Box component="div">
               <Typography
-                sx={{color: '#ffffff', fontWeight: 600}}
+                sx={{ color: '#ffffff', fontWeight: 600 }}
               >
                 {userData.name === '' || !userData.name ? '\u00a0' : userData.name}
               </Typography>
               <Typography
-                sx={{color: '#cecece', fontSize: 10}}
+                sx={{ color: '#cecece', fontSize: 10 }}
               >
                 {imgData.date === '' || !imgData.date ? '\u00a0' : imgData.date}
               </Typography>
@@ -78,10 +76,10 @@ function ImagePost(props)
         component="img"
         src={imgData ? imgData.img : ''}
         alt=""
-        sx={{width:'100%', height:'auto'}}
+        sx={{ width: '100%', height: 'auto' }}
       />
       <Typography
-        sx={{color: '#FFFFFF'}}
+        sx={{ color: '#FFFFFF' }}
         px={1}
       >
         {imgData ? imgData.caption : ''}

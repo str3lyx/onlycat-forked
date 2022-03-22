@@ -1,34 +1,33 @@
 import * as React from 'react'
 import ImagePost from './ImagePost'
-import {Grid} from '@mui/material'
+import { Grid } from '@mui/material'
 
 const axios = require('axios')
 
-function ImageBoard(props)
-{
+function ImageBoard(props) {
   const [data, setData] = React.useState([])
 
   React.useEffect(() => {
-    axios.get('http://localhost:5000/api/data')
-        .then((res) => {
-          setData(res.data)
-        })
+    axios.get(`${process.env['REACT_APP_BACKEND_URL']}/api/data`)
+      .then((res) => {
+        setData(res.data)
+      })
   }, [])
 
   return (
     <Grid container spacing={2}
-      sx={{bgcolor: '#000000', width: '90%', padding: '20px', boxSizing: 'border-box'}}
+      sx={{ bgcolor: '#000000', width: '90%', padding: '20px', boxSizing: 'border-box' }}
       m='auto'
     >
-    {
-      data.map((img_name) => {
-        return (
-        <Grid item xs={3}>
-          <ImagePost key={img_name} img={img_name} user={props.user}/>
-        </Grid>
-        )
-      })
-    }
+      {
+        data.map((img_name) => {
+          return (
+            <Grid item xs={3}>
+              <ImagePost key={img_name} img={img_name} user={props.user} />
+            </Grid>
+          )
+        })
+      }
     </Grid>
   )
 }

@@ -32,12 +32,12 @@ export default function MenuAppBar(props) {
     };
 
     const handleGetInfo = async () => {
-        let result = await axios.get('http://localhost:5000/api/info')
+        let result = await axios.get(`${process.env['REACT_APP_BACKEND_URL']}/api/info`)
         console.log(result.data)
     }
 
     const handleSetInfo = () => {
-        axios.get('http://localhost:5000/api/info')
+        axios.get(`${process.env['REACT_APP_BACKEND_URL']}/api/info`)
             .then((result) => {
                 props.userData(result.data)
                 setuserName(result.data.name)
@@ -64,7 +64,7 @@ export default function MenuAppBar(props) {
     const responseFacebook = async (response) => {
         if (response.accessToken) {
             // console.log('login with accessToken= ' + response.accessToken)
-            let result = await axios.post('http://localhost:5000/api/login', {
+            let result = await axios.post(`${process.env['REACT_APP_BACKEND_URL']}/api/login`, {
                 token: response.accessToken
             })
             // console.log(result.data)
@@ -97,7 +97,7 @@ export default function MenuAppBar(props) {
                                     aria-label="upload cat image here"
                                     aria-haspopup="false"
                                     color="inherit"
-                                    sx={{mx: 1}}
+                                    sx={{ mx: 1 }}
                                 >
                                     <UploadIcon />
                                 </IconButton>
