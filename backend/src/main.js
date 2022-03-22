@@ -24,7 +24,6 @@ const only_cat_data = {
         author: 'placeholder',
         caption: 'test #rrr#',
         date: new Date(),
-        tags: ['rrr'],
         reaction: {
             like: [],
             dislike: []
@@ -33,7 +32,7 @@ const only_cat_data = {
     'mabin_canny_stage_08': {
         img: 'http://localhost:5000/img/mabin_canny_09.png',
         author: '',
-        caption: '',
+        caption: 'test',
         date: '',
         reaction: {
             like: [],
