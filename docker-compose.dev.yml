@@ -2,13 +2,13 @@ version: '3.8'
 services:
   backend:
     build: ./backend
-    image: onlycat.azurecr.io/onlycat-backend
+    # image: onlycat.azurecr.io/onlycat-backend
     container_name: onlycat-backend
     restart: on-failure
     ports:
       - 5000:5000
     # volumes:
-    #   - backend:/app
+    #   - ./backend:/app
     depends_on:
       - mongodb
     networks:
@@ -17,14 +17,12 @@ services:
 
   frontend:
     build: ./frontend
-    image: onlycat.azurecr.io/onlycat-frontend
     container_name: onlycat-frontend
     restart: on-failure
-    domainname: "onlycat"
     ports:
       - 80:80
     # volumes:
-    #   - frontend:/app/build
+    #   - ./frontend:/app/build
     depends_on:
       - backend
     networks:
@@ -43,26 +41,8 @@ services:
       - onlycat
 
 # volumes:
-#   frontend:
-#     driver: azure_file
-#     driver_opts:
-#       share_name: frontend
-#       storage_account_name: onlycat
-#   backend:
-#     driver: azure_file
-#     driver_opts:
-#       share_name: backend
-#       storage_account_name: onlycat
 #   mongodb:
-#     driver: azure_file
-#     driver_opts:
-#       share_name: mongodb
-#       storage_account_name: onlycat
 #   mongodb-config:
-#     driver: azure_file
-#     driver_opts:
-#       share_name: mongodb-config
-#       storage_account_name: onlycat
 
 networks:
   onlycat:
