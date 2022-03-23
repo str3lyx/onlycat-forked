@@ -13,7 +13,7 @@ services:
       - mongodb
     networks:
       - onlycat
-    command: node src/main.js
+    command: npm run dev
 
   frontend:
     build: ./frontend
@@ -32,8 +32,6 @@ services:
     image: mongo
     container_name: onlycat-mongodb
     restart: on-failure
-    ports:
-      - 27017:27017
     # volumes:
     #   - mongodb:/data/db
     #   - mongodb-config:/data/configdb

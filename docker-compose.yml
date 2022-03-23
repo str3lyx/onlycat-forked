@@ -1,7 +1,9 @@
 version: '3.8'
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-production
     image: onlycat.azurecr.io/onlycat-backend
     container_name: onlycat-backend
     restart: on-failure
@@ -24,6 +26,7 @@ services:
     ports:
       - 80:80
       - 443:443
+    env_file: ./frontend/.env.production
     # volumes:
     #   - frontend:/app/build
     depends_on:

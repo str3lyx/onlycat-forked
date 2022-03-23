@@ -1,6 +1,6 @@
 module.exports = {
     DB: {
-        host: 'localhost', // 'mongodb' for production
+        host: 'mongodb',
         port: 27017,
         name: 'only-cat'
     },
