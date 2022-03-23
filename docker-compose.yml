@@ -23,6 +23,7 @@ services:
     domainname: "onlycat"
     ports:
       - 80:80
+      - 443:443
     # volumes:
     #   - frontend:/app/build
     depends_on:
