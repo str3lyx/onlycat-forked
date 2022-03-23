@@ -1,4 +1,4 @@
-# only-cat 
+# Only-cat 
 > เว็บแมวๆ
 ## เป้าหมาย
 สร้าง Web Application ที่มีการใช้ REST API โดยมีเงื่อนไขดังต่อไปนี้
@@ -17,10 +17,11 @@
 
 ### Deployment
 
-- [ ] ทำการ deploy ทั้งตัว Backend และ Frontend ขึ้น Cloud Server 
-    - [ ] AWS
+- [x] ทำการ deploy ทั้งตัว Backend และ Frontend ขึ้น Cloud Server 
+    - [x] Azure
+- [x] ใช้ nginx เป็น reverse proxy
+- [x] ใช้ docker ในการ deploy (และใช้สำหรับ develop)
 - [ ] ใช้ pm2 ในการ deploy node.js application
-- [ ] ใช้ nginx เป็น reverse proxy
 - [ ] ใช้ let’s encrypt ในการออก certificate สำหรับ https
 
 ---
