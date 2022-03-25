@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Typography, Avatar, Button, Box, Grid } from '@mui/material'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import config from '../config';
+
 const axios = require('axios')
 
 function ImagePost(props) {
@@ -19,7 +21,7 @@ function ImagePost(props) {
     }
     var data = { img: props.img, reaction: react }
     console.log(data)
-    axios.post(`${process.env['REACT_APP_BACKEND_URL']}/api/react`, data)
+    axios.post(`${config.apiUrlPrefix}/react`, data)
       .then((res) => {
         updateData()
       })
@@ -30,13 +32,13 @@ function ImagePost(props) {
 
   const updateData = () => {
     // get image and user data
-    axios.get(`${process.env['REACT_APP_BACKEND_URL']}/api/data?img=${props.img}`)
+    axios.get(`${config.apiUrlPrefix}/data?img=${props.img}`)
       .then((res) => {
         console.log(res)
         setImgData(res.data)
 
         // get author's user data
-        axios.get(`${process.env['REACT_APP_BACKEND_URL']}/api/data?user=${res.data.author}`)
+        axios.get(`${config.apiUrlPrefix}/data?user=${res.data.author}`)
           .then((res2) => {
             setUserData(res2.data)
           })

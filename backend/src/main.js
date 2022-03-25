@@ -20,7 +20,7 @@ app.use(expressLogger);
 
 const only_cat_data = {
     'mabin_canny_stage_09': {
-        img: `${config.URL}/img/mabin_canny_09.png`,
+        img: `${config.imgUrlPrefix}/mabin_canny_09.png`,
         author: 'placeholder',
         caption: 'test #rrr#',
         date: new Date(),
@@ -30,7 +30,7 @@ const only_cat_data = {
         }
     },
     'mabin_canny_stage_08': {
-        img: `${config.URL}/img/mabin_canny_09.png`,
+        img: `${config.imgUrlPrefix}/mabin_canny_09.png`,
         author: '',
         caption: 'test',
         date: '',
@@ -44,7 +44,7 @@ const only_cat_data = {
 const users = {
     placeholder: {
         name: 'MABIN',
-        picture: `${config.URL}/img/mabin_canny_09.png`,
+        picture: `${config.imgUrlPrefix}/mabin_canny_09.png`,
         email: '',
         date: '',
         account: {

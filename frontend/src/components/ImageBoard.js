@@ -1,6 +1,7 @@
 import * as React from 'react'
 import ImagePost from './ImagePost'
 import { Grid } from '@mui/material'
+import config from '../config';
 
 const axios = require('axios')
 
@@ -8,7 +9,7 @@ function ImageBoard(props) {
   const [data, setData] = React.useState([])
 
   React.useEffect(() => {
-    axios.get(`${process.env['REACT_APP_BACKEND_URL']}/api/data`)
+    axios.get(`${config.apiUrlPrefix}/data`)
       .then((res) => {
         setData(res.data)
       })

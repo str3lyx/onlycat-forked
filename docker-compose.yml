@@ -1,14 +1,12 @@
 version: '3.8'
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile-production
+    build: ./backend
     image: onlycat.azurecr.io/onlycat-backend
     container_name: onlycat-backend
     restart: on-failure
     ports:
-      - 5000:5000
+      - 127.0.0.1:5000:5000
     # volumes:
     #   - backend:/app
     depends_on:
@@ -26,7 +24,6 @@ services:
     ports:
       - 80:80
       - 443:443
-    env_file: ./frontend/.env.production
     # volumes:
     #   - frontend:/app/build
     depends_on:
@@ -38,8 +35,6 @@ services:
     image: mongo
     container_name: onlycat-mongodb
     restart: on-failure
-    ports:
-      - 27017:27017
     # volumes:
     #   - mongodb:/data/db
     #   - mongodb-config:/data/configdb
