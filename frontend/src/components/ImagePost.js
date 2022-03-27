@@ -8,6 +8,7 @@ const axios = require('axios')
 
 function ImagePost(props) {
   const [userData, setUserData] = React.useState(null)
+  const [react, setReactData] = React.useState('')
   const [imgData, setImgData] = React.useState(null)
 
   React.useEffect(() => {
@@ -25,9 +26,7 @@ function ImagePost(props) {
       .then((res) => {
         updateData()
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .catch((err) => {})
   }
 
   const updateData = () => {
@@ -36,6 +35,20 @@ function ImagePost(props) {
       .then((res) => {
         console.log(res)
         setImgData(res.data)
+        setReactData('')
+        
+        // highlight like and dislike pressed button
+        if(props.user)
+        {
+          if(res.data.reaction.like.find(el => el === props.user.id))
+          {
+            setReactData('like')
+          }
+          if(res.data.reaction.dislike.find(el => el === props.user.id))
+          {
+            setReactData('dislike')
+          }
+        }
 
         // get author's user data
         axios.get(`${config.apiUrlPrefix}/data?user=${res.data.author}`)
@@ -91,10 +104,12 @@ function ImagePost(props) {
           <Button
             onClick={(e) => onBtnReaction_click('like')}
             sx={{
-              backgroundColor: '#4d4d4d', color: '#ffffff', width: '100%',
+              backgroundColor: '#4d4d4d',
+              color: `${react === 'like' ? '#00ff00' : '#ffffff'}`,
+              width: '100%',
               borderTopLeftRadius: 0, borderTopRightRadius: 0,
               borderBottomLeftRadius: '12px', borderBottomRightRadius: 0,
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}
             mx={0}
           >
@@ -108,7 +123,9 @@ function ImagePost(props) {
           <Button
             onClick={(e) => onBtnReaction_click('dislike')}
             sx={{
-              backgroundColor: '#4d4d4d', color: '#ffffff', width: '100%',
+              backgroundColor: '#4d4d4d',
+              color: `${react === 'dislike' ? '#ff0000' : '#ffffff'}`,
+              width: '100%',
               borderTopLeftRadius: 0, borderTopRightRadius: 0,
               borderBottomLeftRadius: 0, borderBottomRightRadius: '12px',
               display: 'flex', alignItems: 'center', justifyContent: 'center'
