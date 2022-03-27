@@ -4,7 +4,7 @@ module.exports = {
     DB: {
         host: 'mongodb',
         port: 27017,
-        name: 'only-cat'
+        name: 'onlycat'
     },
     imgUrlPrefix: isProd ? '/img' : 'http://localhost:5000/img',
     TOKEN_SECRET: "this-is-my-secret-for-development"

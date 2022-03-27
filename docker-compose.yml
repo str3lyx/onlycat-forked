@@ -1,12 +1,13 @@
 version: '3.8'
+# azure auto expose port (or networks: work for me idk cause i work :P )
 services:
   backend:
     build: ./backend
     image: onlycat.azurecr.io/onlycat-backend
     container_name: onlycat-backend
     restart: on-failure
-    ports:
-      - 127.0.0.1:5000:5000
+    # ports:
+    #   - 127.0.0.1:5000:5000
     # volumes:
     #   - backend:/app
     depends_on:
@@ -35,13 +36,19 @@ services:
     image: mongo
     container_name: onlycat-mongodb
     restart: on-failure
-    # volumes:
-    #   - mongodb:/data/db
-    #   - mongodb-config:/data/configdb
     networks:
       - onlycat
+    volumes:
+      - db-data:/db-data
+    command: [ "mongod", "--dbpath=/db-data" ]
+    # /data/db in azure wont work so change storage path
 
-# volumes:
+volumes:
+  db-data:
+    driver: azure_file
+    driver_opts:
+      share_name: mongodb-data
+      storage_account_name: onlycat
 #   frontend:
 #     driver: azure_file
 #     driver_opts:
@@ -51,16 +58,6 @@ services:
 #     driver: azure_file
 #     driver_opts:
 #       share_name: backend
-#       storage_account_name: onlycat
-#   mongodb:
-#     driver: azure_file
-#     driver_opts:
-#       share_name: mongodb
-#       storage_account_name: onlycat
-#   mongodb-config:
-#     driver: azure_file
-#     driver_opts:
-#       share_name: mongodb-config
 #       storage_account_name: onlycat
 
 networks:
