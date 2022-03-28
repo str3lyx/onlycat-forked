@@ -115,7 +115,6 @@ app.post('/api/react', [authenticated, bodyParser.json()], (req, res) => {
             else users[id].reaction[key].push(img)
         }
     }
-    console.log(only_cat_data)
     res.sendStatus(200)
 })
 
@@ -134,7 +133,7 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
     }
 
     // found user data
-    let data = {
+    var data = {
         id: result.data.id,
         username: result.data.name,
         email: result.data.email,
@@ -178,9 +177,9 @@ app.listen(port, () => {
 // ----------------------------- utils ----------------------------------------- //
 
 function isUserRegistered(acc_id, tag) {
-    for (let index in users) {
+    for (let index of Object.keys(users)) {
         if (users[index].account[tag] === acc_id)
-            return Object.keys(users)[index]
+            return index
     }
     return null
 }
