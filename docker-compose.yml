@@ -1,15 +1,10 @@
 version: '3.8'
-# azure auto expose port (or networks: work for me idk cause i work :P )
 services:
   backend:
     build: ./backend
-    image: onlycat.azurecr.io/onlycat-backend
+    image: onlycat-backend
     container_name: onlycat-backend
     restart: on-failure
-    # ports:
-    #   - 127.0.0.1:5000:5000
-    # volumes:
-    #   - backend:/app
     depends_on:
       - mongodb
     networks:
@@ -18,17 +13,16 @@ services:
 
   frontend:
     build: ./frontend
-    image: onlycat.azurecr.io/onlycat-frontend
+    image: onlycat-frontend
     container_name: onlycat-frontend
     restart: on-failure
-    domainname: "onlycat"
+    domainname: "onlycat" ##
     ports:
       - 80:80
       - 443:443
-    # volumes:
-    #   - frontend:/app/build
-    depends_on:
-      - backend
+    volumes:
+      - html:/usr/share/nginx/html/
+      - cert-conf:/etc/nginx/ssl/
     networks:
       - onlycat
 
@@ -39,27 +33,98 @@ services:
     networks:
       - onlycat
     volumes:
-      - db-data:/db-data
-    command: [ "mongod", "--dbpath=/db-data" ]
-    # /data/db in azure wont work so change storage path
+      - db-data:/data/db
+    #
+
+    # certbot:
+    #   image: certbot/certbot:latest
+    #   container_name: onlycat-cert
+    #   volumes:
+    #     - html:/usr/share/nginx/html/
+    #     - cert-conf:/etc/letsencrypt/
+    #   networks:
+    #     - onlycat
+    #   # init > # docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d onlycat.eastus.azurecontainer.io -d www.onlycat.eastus.azurecontainer.io --register-unsafely-without-email
+    #   # renew > # docker compose run --rm certbot renew
 
 volumes:
   db-data:
-    driver: azure_file
-    driver_opts:
-      share_name: mongodb-data
-      storage_account_name: onlycat
-#   frontend:
-#     driver: azure_file
-#     driver_opts:
-#       share_name: frontend
-#       storage_account_name: onlycat
-#   backend:
-#     driver: azure_file
-#     driver_opts:
-#       share_name: backend
-#       storage_account_name: onlycat
+  html:
+  cert-conf:
 
 networks:
   onlycat:
     driver: bridge # default
+
+##### AZURE ACI (OLD)
+# version: '3.8'
+# # azure auto expose port (or networks: work for me idk cause i work :P )
+# services:
+#   backend:
+#     build: ./backend
+#     image: onlycat.azurecr.io/onlycat-backend
+#     container_name: onlycat-backend
+#     restart: on-failure
+#     depends_on:
+#       - mongodb
+#     networks:
+#       - onlycat
+#     command: node src/main.js
+
+#   frontend:
+#     build: ./frontend
+#     image: onlycat.azurecr.io/onlycat-frontend
+#     container_name: onlycat-frontend
+#     restart: on-failure
+#     domainname: "onlycat" # for FQDN
+#     ports:
+#       - 80:80
+#       - 443:443
+#     volumes:
+#       - html:/usr/share/nginx/html/
+#       - cert-conf:/etc/nginx/ssl/
+#     networks:
+#       - onlycat
+
+#   mongodb:
+#     image: mongo
+#     container_name: onlycat-mongodb
+#     restart: on-failure
+#     networks:
+#       - onlycat
+#     volumes:
+#       - db-data:/db-data
+#     command: [ "mongod", "--dbpath=/db-data" ]
+#     # /data/db in azure wont work so change storage path
+
+#     # certbot:
+#     #   image: certbot/certbot:latest
+#     #   container_name: onlycat-cert
+#     #   volumes:
+#     #     - html:/usr/share/nginx/html/
+#     #     - cert-conf:/etc/letsencrypt/
+#     #   networks:
+#     #     - onlycat
+#     # init > # docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d onlycat.eastus.azurecontainer.io -d www.onlycat.eastus.azurecontainer.io --register-unsafely-without-email
+#     # renew > # docker compose run --rm certbot renew
+
+# volumes:
+#   db-data:
+#     driver: azure_file
+#     driver_opts:
+#       share_name: mongodb-data
+#       storage_account_name: onlycat
+#   html:
+#     driver: azure_file
+#     driver_opts:
+#       share_name: html-data
+#       storage_account_name: onlycat
+#   cert-conf:
+#     driver: azure_file
+#     driver_opts:
+#       share_name: certbot-config
+#       storage_account_name: onlycat
+
+# networks:
+#   onlycat:
+#     driver: bridge # default

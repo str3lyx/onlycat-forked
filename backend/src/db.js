@@ -6,13 +6,29 @@ const { logger } = require('./logger');
 
 const { DB: { host, port, name } } = config;
 const connection_uri = `mongodb://${host}:${port}/${name}`;
-mongoose.connect(connection_uri, function (error) {
-    if (error) {
-        logger.error('mongodb connect error')
-    } else {
-        logger.debug('mongodb connected')
-    }
+var db = mongoose.connection;
+const connectMongodb = () => {
+    mongoose.connect(connection_uri, (error) => {
+        if (error) {
+            logger.error('Error in MongoDB connection: ' + error);
+            mongoose.disconnect();
+        }
+    })
+};
+db.on('disconnected', function () {
+    logger.error('MongoDB disconnected!');
+    connectMongodb()
 });
+db.on('reconnected', function () {
+    logger.info('MongoDB reconnected!');
+});
+db.on('connected', function () {
+    console.log('MongoDB connected!');
+});
+db.on('connecting', function () {
+    logger.debug('connecting to MongoDB...');
+});
+connectMongodb()
 
 const Users = model("User", Schema({
     _id: Schema.Types.ObjectId,
