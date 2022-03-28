@@ -30,22 +30,29 @@ db.on('connecting', function () {
 });
 connectMongodb()
 
-const Users = model("User", Schema({
-    _id: Schema.Types.ObjectId,
+const User = model("User", Schema({
+    id: { type: String, required: true }, // id from oauth
     username: { type: String, required: true },
     email: { type: String, required: true },
-    picture: { type: String, required: true },
+    picture_url: { type: String, required: true },
     createdAt: { type: Date, required: true, default: Date.now() },
+    reaction: {
+        like: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+        disLike: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
+    },
 }))
 
-const ReactionSchema = Schema({ like: { type: Number, default: 0 }, disLike: { type: Number, default: 0 } })
-const Posts = model("Post", Schema({
+// const ReactionSchema = Schema({ like: { type: Schema.Types.ObjectId, ref: 'User' }, disLike: { type: Schema.Types.ObjectId, ref: 'User' } })
+const Post = model("Post", Schema({
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     caption: { type: String },
-    reactions: [ReactionSchema],
+    reaction: {
+        like: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+        disLike: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    },
     image: { type: { binData: Buffer, contentType: String }, required: true },
     createdAt: { type: Date, required: true, default: Date.now() },
     updatedAt: { type: Date, required: true, default: Date.now() },
 }))
 
-module.exports = { Users, Posts };
+module.exports = { User, Post };

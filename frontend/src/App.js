@@ -43,13 +43,13 @@ function App() {
 
   const userData = (data) => {
     setUserData(data)
-    console.log(data)
+    // console.log(data)
   }
 
   return (
     <ThemeProvider theme={theme}>
-      <MenuAppBar userData={userData}/>
-      <ImageBoard user={user}/>
+      <MenuAppBar userData={userData} />
+      <ImageBoard user={user} />
     </ThemeProvider>
   );
 }

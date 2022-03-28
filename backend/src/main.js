@@ -139,36 +139,30 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
         username: result.data.name,
         email: result.data.email,
         picture: result.data.picture,
-        date: new Date()
     }
 
     // check data in database
-    let index = isUserRegistered(data.id, 'facebook')
-    if (index == null) {
-        let name = crypto.createHash('sha256').update(JSON.stringify(data)).digest('base64')
-        users[name] = {
-            id: name,
-            name: data.username,
-            picture: data.picture,
-            date: data.date,
-            account: {
-                facebook: data.id
-            },
-            reaction: {
-                like: [],
-                dislike: []
-            },
-            upload: []
-        }
-        index = name
-    }
+    let user = await models.User.findOne({ id: data.id }).exec()
+    if (user == null) {
+        user = new models.User({
+            id: data.id,
+            username: data.username,
+            email: data.email,
+            picture_url: data.picture.data.url,
+            createdAt: new Date(),
+        })
+        user.save()
 
-    let access_token = jwt.sign({ id: index }, TOKEN_SECRET, { expiresIn: '3h' })
+    }
+    // console.log(user.id, user._id)
+
+    let access_token = jwt.sign({ id: user.id }, TOKEN_SECRET, { expiresIn: '3h' })
     res.send({ access_token })
 })
 
-app.get('/api/info', authenticated, (req, res) => {
-    res.send(users[req.data.id])
+app.get('/api/info', authenticated, async (req, res) => {
+    const user = await models.User.findOne({ id: req.data.id }).exec()
+    res.send(user)
 })
 
 app.listen(port, () => {

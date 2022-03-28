@@ -35,15 +35,15 @@ export default function MenuAppBar(props) {
 
     const handleGetInfo = async () => {
         let result = await axios.get(`${config.apiUrlPrefix}/info`)
-        console.log(result.data)
+        console.log("INFO: ", result.data)
     }
 
     const handleSetInfo = () => {
         axios.get(`${config.apiUrlPrefix}/info`)
             .then((result) => {
                 props.userData(result.data)
-                setuserName(result.data.name)
-                setuserImagePath(result.data.picture.data.url)
+                setuserName(result.data.username)
+                setuserImagePath(result.data.picture_url)
             })
             .catch((err) => {
                 handleLogout()
