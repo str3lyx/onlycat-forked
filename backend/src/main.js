@@ -43,6 +43,7 @@ const only_cat_data = {
 
 const users = {
     placeholder: {
+        id: 'placeholder',
         name: 'MABIN',
         picture: `${config.imgUrlPrefix}/mabin_canny_09.png`,
         email: '',
@@ -146,6 +147,7 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
     if (index == null) {
         let name = crypto.createHash('sha256').update(JSON.stringify(data)).digest('base64')
         users[name] = {
+            id: name,
             name: data.username,
             picture: data.picture,
             date: data.date,
