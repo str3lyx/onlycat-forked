@@ -70,6 +70,7 @@ export default function MenuAppBar(props) {
             // console.log(result.data)
             sessionStorage.setItem('access_token', result.data.access_token)
             setAuth(true)
+            window.location.reload()
         }
     }
 
