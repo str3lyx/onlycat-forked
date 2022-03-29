@@ -3,8 +3,9 @@ const bodyParser = require('body-parser')
 const axios = require('axios')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
+const multer = require('multer');
+const upload = multer();
 
-const crypto = require('crypto')
 const config = require('../config');
 const { expressLogger, logger } = require('./logger')
 const models = require('./db')
@@ -17,6 +18,7 @@ const port = process.env['SERVER_PORT'] || 5000
 app.use(cors())
 app.use('/img', express.static('public'))
 app.use(expressLogger);
+app.use(bodyParser.json())
 
 const only_cat_data = {
     'mabin_canny_stage_09': {
@@ -65,9 +67,9 @@ const authenticated = (req, res, next) => {
     if (!token) return res.sendStatus(401)
     jwt.verify(token, TOKEN_SECRET, (err, data) => {
         if (err) return res.sendStatus(403)
-
         req.data = {
-            id: data.id
+            ...req.data,
+            userId: data.id
         }
         next()
     })
@@ -91,7 +93,7 @@ app.post('/api/react', [authenticated, bodyParser.json()], (req, res) => {
         return
     }
 
-    let id = req.data.id
+    let id = req.data.userId
     // handle like and dislike of image
     for (let key of Object.keys(only_cat_data[img].reaction)) {
         let index = only_cat_data[img].reaction[key].findIndex(uid => uid == id)
@@ -118,7 +120,7 @@ app.post('/api/react', [authenticated, bodyParser.json()], (req, res) => {
     res.sendStatus(200)
 })
 
-app.post('/api/login', bodyParser.json(), async (req, res) => {
+app.post('/api/login', async (req, res) => {
     let token = req.body.token
     let result = await axios.get('https://graph.facebook.com/me', {
         params: {
@@ -135,32 +137,55 @@ app.post('/api/login', bodyParser.json(), async (req, res) => {
     // found user data
     var data = {
         id: result.data.id,
-        username: result.data.name,
+        name: result.data.name,
         email: result.data.email,
         picture: result.data.picture,
     }
 
     // check data in database
-    let user = await models.User.findOne({ id: data.id }).exec()
-    if (user == null) {
-        user = new models.User({
+    let user = await models.User.findOne({ id: data.id }).exec() // find by auth id
+    if (user != null) {
+        // return db id
+        let access_token = jwt.sign({ id: user._id }, TOKEN_SECRET, { expiresIn: '3h' })
+        res.send({ access_token })
+    } else {
+        models.User.create({
             id: data.id,
-            username: data.username,
+            name: data.name,
             email: data.email,
             picture_url: data.picture.data.url,
             createdAt: new Date(),
+        }, function (err, result) {
+            if (err) {
+                logger.error(err);
+                res.status(500).send()
+            } else {
+                logger.info("Created user To database Name: " + result.name + " (id: " + result._id + " )");
+                let access_token = jwt.sign({ id: result._id }, TOKEN_SECRET, { expiresIn: '3h' })
+                res.send({ access_token })
+            }
         })
-        user.save()
-
     }
-    // console.log(user.id, user._id)
-
-    let access_token = jwt.sign({ id: user.id }, TOKEN_SECRET, { expiresIn: '3h' })
-    res.send({ access_token })
+})
+app.post('/api/upload/image', authenticated, upload.single('file'), async (req, res) => {
+    const user = await models.User.findOne({ _id: req.data.userId }).exec()
+    let img = req.file
+    models.Post.create({
+        author: user._id,
+        caption: req.body.caption,
+        image: { binData: img.buffer, contentType: img.mimetype, fileName: img.originalname }
+    }, function (err, result) {
+        if (err) {
+            logger.error(err);
+        } else {
+            logger.info("Saved image To database by " + user.name + " (id: " + result._id + " )");
+        }
+    })
+    res.send({ ok: 1 });
 })
 
 app.get('/api/info', authenticated, async (req, res) => {
-    const user = await models.User.findOne({ id: req.data.id }).exec()
+    const user = await models.User.findOne({ _id: req.data.userId }).exec()
     res.send(user)
 })
 

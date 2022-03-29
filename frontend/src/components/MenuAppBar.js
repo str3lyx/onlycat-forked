@@ -10,14 +10,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import Avatar from '@mui/material/Avatar';
-import UploadIcon from '@mui/icons-material/Upload';
-import Tooltip from '@mui/material/Tooltip'
-
 
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
 import config from '../config';
-
+import UploadButton from './UploadButton';
 
 export default function MenuAppBar(props) {
     const [auth, setAuth] = React.useState(sessionStorage.getItem('access_token') != null);
@@ -42,7 +39,7 @@ export default function MenuAppBar(props) {
         axios.get(`${config.apiUrlPrefix}/info`)
             .then((result) => {
                 props.userData(result.data)
-                setuserName(result.data.username)
+                setuserName(result.data.name)
                 setuserImagePath(result.data.picture_url)
             })
             .catch((err) => {
@@ -93,17 +90,7 @@ export default function MenuAppBar(props) {
                     </Typography>
                     {auth ? (
                         <>
-                            <Tooltip title="Upload">
-                                <IconButton
-                                    size="small"
-                                    aria-label="upload cat image here"
-                                    aria-haspopup="false"
-                                    color="inherit"
-                                    sx={{ mx: 1 }}
-                                >
-                                    <UploadIcon />
-                                </IconButton>
-                            </Tooltip>
+                            <UploadButton />
                             <IconButton
                                 size="small"
                                 aria-label="account of current user"

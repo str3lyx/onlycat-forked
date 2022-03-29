@@ -32,7 +32,7 @@ connectMongodb()
 
 const User = model("User", Schema({
     id: { type: String, required: true }, // id from oauth
-    username: { type: String, required: true },
+    name: { type: String, required: true },
     email: { type: String, required: true },
     picture_url: { type: String, required: true },
     createdAt: { type: Date, required: true, default: Date.now() },
@@ -50,7 +50,7 @@ const Post = model("Post", Schema({
         like: [{ type: Schema.Types.ObjectId, ref: 'User' }],
         disLike: [{ type: Schema.Types.ObjectId, ref: 'User' }]
     },
-    image: { type: { binData: Buffer, contentType: String }, required: true },
+    image: { type: { binData: Buffer, contentType: String, fileName: String, }, required: true },
     createdAt: { type: Date, required: true, default: Date.now() },
     updatedAt: { type: Date, required: true, default: Date.now() },
 }))
