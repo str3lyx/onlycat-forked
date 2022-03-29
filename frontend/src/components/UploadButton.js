@@ -31,7 +31,6 @@ export default function UploadButton(props) {
 
     const [selectedFile, setSelectedFile] = React.useState(null);
     const [caption, setcaption] = React.useState("");
-    const [uploadError, setUploadError] = React.useState("");
 
     const submitForm = (e) => {
         e.preventDefault();
@@ -49,6 +48,7 @@ export default function UploadButton(props) {
             .post(`${config.apiUrlPrefix}/upload/image`, formData)
             .then((res) => {
                 alert("อัพโหลดสำเร็จ");
+                window.location.reload()
             })
             .catch((err) => {
                 alert("เกิดข้อผิดผลาด: " + err.data)

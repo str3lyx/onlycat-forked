@@ -40,7 +40,7 @@ export default function MenuAppBar(props) {
             .then((result) => {
                 props.userData(result.data)
                 setuserName(result.data.name)
-                setuserImagePath(result.data.picture_url)
+                setuserImagePath(result.data.pictureUrl)
             })
             .catch((err) => {
                 handleLogout()
@@ -52,6 +52,7 @@ export default function MenuAppBar(props) {
         sessionStorage.removeItem('access_token')
         setAuth(false)
         handleClose()
+        window.location.reload(false) // (false for refresh and using cached)
     }
 
     React.useEffect(() => {

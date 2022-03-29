@@ -20,47 +20,6 @@ app.use('/img', express.static('public'))
 app.use(expressLogger);
 app.use(bodyParser.json())
 
-const only_cat_data = {
-    'mabin_canny_stage_09': {
-        img: `${config.imgUrlPrefix}/mabin_canny_09.png`,
-        author: 'placeholder',
-        caption: 'test #rrr#',
-        date: new Date(),
-        reaction: {
-            like: [],
-            dislike: []
-        }
-    },
-    'mabin_canny_stage_08': {
-        img: `${config.imgUrlPrefix}/mabin_canny_09.png`,
-        author: '',
-        caption: 'test',
-        date: '',
-        reaction: {
-            like: [],
-            dislike: []
-        }
-    }
-}
-
-const users = {
-    placeholder: {
-        id: 'placeholder',
-        name: 'MABIN',
-        picture: `${config.imgUrlPrefix}/mabin_canny_09.png`,
-        email: '',
-        date: '',
-        account: {
-            facebook: ''
-        },
-        reaction: {
-            like: [],
-            dislike: []
-        },
-        upload: []
-    }
-}
-
 const authenticated = (req, res, next) => {
     const auth_header = req.headers['authorization']
     const token = auth_header && auth_header.split(' ')[1]
@@ -75,48 +34,78 @@ const authenticated = (req, res, next) => {
     })
 }
 
-app.get('/api/data', (req, res) => {
-    if (Object.keys(only_cat_data).find(data => data === req.query.img))
-        res.send(JSON.stringify(only_cat_data[req.query.img]))
-    else if (Object.keys(users).find(data => data === req.query.user))
-        res.send(JSON.stringify(users[req.query.user]))
-    else
-        res.send(JSON.stringify(Object.keys(only_cat_data)))
-})
 
-app.post('/api/react', [authenticated, bodyParser.json()], (req, res) => {
-    let img = req.body.img
+app.get('/api/data/post/:_id?', async (req, res) => {
+    let post = null;
+    if (req.params._id) {
+        post = await models.Post.findById(req.params._id).populate('author').exec()
+        post = { post, imageBase64: post.image.binData.toString('base64') }
+        // logger.debug(post)
+    } else {
+        post = await models.Post.find({}, '_id').exec()
+        // logger.debug("all", post)
+    }
+
+    if (post == null) {
+        res.status(404).send()
+        return
+    }
+    res.send(post)
+}
+)
+
+app.post('/api/react', [authenticated, bodyParser.json()], async (req, res) => {
+    let postId = req.body.postId
     let reaction = req.body.reaction
+    const post = await models.Post.findById(postId).exec()
     // image not found
-    if (!only_cat_data[img]) {
+    if (!post) {
         res.sendStatus(404)
         return
     }
 
-    let id = req.data.userId
-    // handle like and dislike of image
-    for (let key of Object.keys(only_cat_data[img].reaction)) {
-        let index = only_cat_data[img].reaction[key].findIndex(uid => uid == id)
-        if (key != reaction) {
-            if (index >= 0) only_cat_data[img].reaction[key].splice(index, 1)
-        }
-        else {
-            if (index >= 0) only_cat_data[img].reaction[key].splice(index, 1)
-            else only_cat_data[img].reaction[key].push(id)
-        }
-    }
+    const userId = req.data.userId
+    const user = await models.User.findById(userId).exec()
 
-    // handle user like and dislike record
-    for (let key of Object.keys(users[id].reaction)) {
-        let index = users[id].reaction[key].findIndex(ina => ina == img)
-        if (key != reaction) {
-            if (index >= 0) users[id].reaction[key].splice(index, 1)
+    if (reaction == 'like') {
+        if (!post.reaction.like.includes(user._id)) { // like
+            logger.info(user.name + " like post " + "(id:" + post._id + ")")
+            post.reaction.like.push(user._id)
+            user.reaction.like.push(post._id)
+            if (post.reaction.disLike.includes(user._id)) { // remove dislike if have
+                let userIndex = post.reaction.disLike.indexOf(user._id)
+                let postIndex = user.reaction.disLike.indexOf(post._id)
+                post.reaction.disLike.splice(userIndex, 1);
+                user.reaction.disLike.splice(postIndex, 1);
+            }
+        } else { // unlike
+            logger.info(user.name + " unlike post " + "(id:" + post._id + ")")
+            let userIndex = post.reaction.like.indexOf(user._id)
+            let postIndex = user.reaction.like.indexOf(post._id)
+            post.reaction.like.splice(userIndex, 1);
+            user.reaction.like.splice(postIndex, 1);
         }
-        else {
-            if (index >= 0) users[id].reaction[key].splice(index, 1)
-            else users[id].reaction[key].push(img)
+    } else if (reaction == 'dislike') {
+        if (!post.reaction.disLike.includes(user._id)) { // dislike
+            logger.info(user.name + " dislike post " + "(id:" + post._id + ")")
+            post.reaction.disLike.push(user._id)
+            user.reaction.disLike.push(post._id)
+            if (post.reaction.like.includes(user._id)) { // remove like if have
+                let userIndex = post.reaction.like.indexOf(user._id)
+                let postIndex = user.reaction.like.indexOf(post._id)
+                post.reaction.like.splice(userIndex, 1);
+                user.reaction.like.splice(postIndex, 1);
+            }
+        } else { // undislike
+            logger.info(user.name + " undislike post " + "(id:" + post._id + ")")
+            let userIndex = post.reaction.disLike.indexOf(user._id)
+            let postIndex = user.reaction.disLike.indexOf(post._id)
+            post.reaction.disLike.splice(userIndex, 1);
+            user.reaction.disLike.splice(postIndex, 1);
         }
     }
+    post.save()
+    user.save()
     res.sendStatus(200)
 })
 
@@ -153,7 +142,7 @@ app.post('/api/login', async (req, res) => {
             id: data.id,
             name: data.name,
             email: data.email,
-            picture_url: data.picture.data.url,
+            pictureUrl: data.picture.data.url,
             createdAt: new Date(),
         }, function (err, result) {
             if (err) {
@@ -177,15 +166,20 @@ app.post('/api/upload/image', authenticated, upload.single('file'), async (req, 
     }, function (err, result) {
         if (err) {
             logger.error(err);
+            res.status(500).send()
         } else {
             logger.info("Saved image To database by " + user.name + " (id: " + result._id + " )");
+            res.send({ ok: 1 });
         }
     })
-    res.send({ ok: 1 });
 })
 
 app.get('/api/info', authenticated, async (req, res) => {
     const user = await models.User.findOne({ _id: req.data.userId }).exec()
+    if (!user) {
+        res.sendStatus(401)
+        return
+    }
     res.send(user)
 })
 
@@ -195,10 +189,10 @@ app.listen(port, () => {
 
 // ----------------------------- utils ----------------------------------------- //
 
-function isUserRegistered(acc_id, tag) {
-    for (let index of Object.keys(users)) {
-        if (users[index].account[tag] === acc_id)
-            return index
-    }
-    return null
-}
+// function isUserRegistered(acc_id, tag) {
+//     for (let index of Object.keys(users)) {
+//         if (users[index].account[tag] === acc_id)
+//             return index
+//     }
+//     return null
+// }

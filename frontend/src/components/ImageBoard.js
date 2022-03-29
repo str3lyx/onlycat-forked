@@ -9,9 +9,10 @@ function ImageBoard(props) {
   const [data, setData] = React.useState([])
 
   React.useEffect(() => {
-    axios.get(`${config.apiUrlPrefix}/data`)
+    axios.get(`${config.apiUrlPrefix}/data/post`)
       .then((res) => {
         setData(res.data)
+        // console.log("board ", res.data)
       })
   }, [])
 
@@ -21,10 +22,10 @@ function ImageBoard(props) {
       m='auto'
     >
       {
-        data.map((img_name) => {
+        data.map((data) => {
           return (
-            <Grid item xs={3}>
-              <ImagePost key={img_name} img={img_name} user={props.user} />
+            <Grid item xs={3} key={"GridImagePost-" + data._id}>
+              <ImagePost postId={data._id} user={props.user} />
             </Grid>
           )
         })

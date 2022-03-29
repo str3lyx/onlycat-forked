@@ -34,7 +34,7 @@ const User = model("User", Schema({
     id: { type: String, required: true }, // id from oauth
     name: { type: String, required: true },
     email: { type: String, required: true },
-    picture_url: { type: String, required: true },
+    pictureUrl: { type: String, required: true },
     createdAt: { type: Date, required: true, default: Date.now() },
     reaction: {
         like: [{ type: Schema.Types.ObjectId, ref: 'Post' }],

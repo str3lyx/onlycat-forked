@@ -7,9 +7,8 @@ import config from '../config';
 const axios = require('axios')
 
 function ImagePost(props) {
-  const [userData, setUserData] = React.useState(null)
   const [react, setReactData] = React.useState('')
-  const [imgData, setImgData] = React.useState(null)
+  const [postData, setPostData] = React.useState(null)
 
   React.useEffect(() => {
     updateData()
@@ -20,56 +19,45 @@ function ImagePost(props) {
       alert('คุณยังไม่ได้ login')
       return
     }
-    var data = { img: props.img, reaction: react }
+    var data = { postId: props.postId, reaction: react }
     console.log(data)
     axios.post(`${config.apiUrlPrefix}/react`, data)
       .then((res) => {
         updateData()
       })
-      .catch((err) => {})
+      .catch((err) => { })
   }
 
   const updateData = () => {
     // get image and user data
-    axios.get(`${config.apiUrlPrefix}/data?img=${props.img}`)
+    axios.get(`${config.apiUrlPrefix}/data/post/${props.postId}`)
       .then((res) => {
-        console.log(res)
-        setImgData(res.data)
+        console.log(res.data)
+        setPostData(res.data)
         setReactData('')
-        
+
         // highlight like and dislike pressed button
-        if(props.user)
-        {
-          if(res.data.reaction.like.find(el => el === props.user.id))
-          {
+        if (props.user) {
+          if (res.data.post.reaction.like.includes(props.user._id)) {
             setReactData('like')
           }
-          if(res.data.reaction.dislike.find(el => el === props.user.id))
-          {
+          if (res.data.post.reaction.disLike.includes(props.user._id)) {
             setReactData('dislike')
           }
         }
-
-        // get author's user data
-        axios.get(`${config.apiUrlPrefix}/data?user=${res.data.author}`)
-          .then((res2) => {
-            setUserData(res2.data)
-          })
-          .catch((err) => { })
-      })
-      .catch((err) => { })
+      }).catch((err) => { })
   }
 
   return (
     <Box mx={0} my={0} sx={{ borderRadius: '12px', backgroundColor: '#3d3d3d' }}>
-      {userData ?
+      {postData ? postData.post.author != null ?
         <Grid container width="100%" px={1} spacing={1} marginBottom={1}>
           <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Avatar
-              alt={userData.name}
-              src={userData.picture}
+              alt={postData.post.author.name}
+              src={postData.post.author.pictureUrl}
             >
-              {userData.picture === '' ? userData.name[0] : ''}
+              {postData.post.author.pictureUrl === '' ? postData.post.author.name[0] : ''}
             </Avatar>
           </Grid>
           <Grid item xs={10} sx={{ display: 'flex', alignItems: 'center' }}>
@@ -77,19 +65,46 @@ function ImagePost(props) {
               <Typography
                 sx={{ color: '#ffffff', fontWeight: 600 }}
               >
-                {userData.name === '' || !userData.name ? '\u00a0' : userData.name}
+                {postData.post.author.name === '' || !postData.post.author.name ? '\u00a0' : postData.post.author.name}
               </Typography>
               <Typography
                 sx={{ color: '#cecece', fontSize: 10 }}
+                style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}
               >
-                {imgData.date === '' || !imgData.date ? '\u00a0' : imgData.date}
+                {"โพสวันที่: " + new Date(postData.post.author.createdAt).toLocaleDateString()}
+                <br />
+                {" เวลา: " + new Date(postData.post.author.createdAt).toLocaleTimeString()}
               </Typography>
             </Box>
           </Grid>
-        </Grid> : ''}
+        </Grid> : // if author is null
+        <Grid container width="100%" px={1} spacing={1} marginBottom={1}>
+          <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Avatar
+              alt="Unknow User"
+            >
+            </Avatar>
+          </Grid>
+          <Grid item xs={10} sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box component="div">
+              <Typography
+                sx={{ color: '#ffffff', fontWeight: 600 }}
+              >
+                Unknow
+              </Typography>
+              <Typography
+                sx={{ color: '#cecece', fontSize: 10 }}
+                style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}
+              >
+                -
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid> : ''
+      }
       <Box
         component="img"
-        src={imgData ? imgData.img : ''}
+        src={postData ? `data:${postData.post.image.contentType};base64,${postData.imageBase64}` : ''}
         alt=""
         sx={{ width: '100%', height: 'auto' }}
       />
@@ -97,7 +112,7 @@ function ImagePost(props) {
         sx={{ color: '#FFFFFF' }}
         px={1}
       >
-        {imgData ? imgData.caption : ''}
+        {postData ? postData.post.caption : ''}
       </Typography>
       <Grid container>
         <Grid item xs={6}>
@@ -115,7 +130,7 @@ function ImagePost(props) {
           >
             <ThumbUpIcon />
             <Typography mx={1}>
-              {imgData ? imgData.reaction.like.length : 0}
+              {postData ? postData.post.reaction.like.length : 0}
             </Typography>
           </Button>
         </Grid>
@@ -134,12 +149,12 @@ function ImagePost(props) {
           >
             <ThumbDownIcon />
             <Typography mx={1}>
-              {imgData ? imgData.reaction.dislike.length : 0}
+              {postData ? postData.post.reaction.disLike.length : 0}
             </Typography>
           </Button>
         </Grid>
       </Grid>
-    </Box>
+    </Box >
   )
 }
 
