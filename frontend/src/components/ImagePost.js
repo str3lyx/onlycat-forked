@@ -20,7 +20,7 @@ function ImagePost(props) {
       return
     }
     var data = { postId: props.postId, reaction: react }
-    console.log(data)
+    // console.log(data)
     axios.post(`${config.apiUrlPrefix}/react`, data)
       .then((res) => {
         updateData()
@@ -32,7 +32,7 @@ function ImagePost(props) {
     // get image and user data
     axios.get(`${config.apiUrlPrefix}/data/post/${props.postId}`)
       .then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         setPostData(res.data)
         setReactData('')
 

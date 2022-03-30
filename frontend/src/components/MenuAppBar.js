@@ -10,6 +10,10 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import Avatar from '@mui/material/Avatar';
+import TextField from '@mui/material/TextField';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
+import Link from '@mui/material/Link';
 
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
@@ -76,70 +80,86 @@ export default function MenuAppBar(props) {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        Only Cat
+            {/* style={{ background: 'transparent', boxShadow: 'none' }} */}
+            <AppBar position="static" >
+                <Toolbar
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                    }}>
+                    <Typography variant="h6" component="div">
+                        <Link href="/" color="inherit" sx={{
+                            textDecoration: 'none', fontWidth: 'bold',
+                            fontSize: 30,
+                        }}>
+                            ONLY CAT
+                        </Link>
                     </Typography>
-                    {auth ? (
-                        <>
-                            <UploadButton />
-                            <IconButton
-                                size="small"
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleMenu}
-                                color="inherit"
-                            >
-                                <Avatar
-                                    alt={userName}
-                                    src={userImagePath}
-                                    sx={{ width: 50, height: 50, mx: 1 }}
-                                >
-                                    {userName[0]} {/* สำหรับเมื่อไม่สามารถโหลดรูปได้ */}
-                                </Avatar>
-                                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} >
-                                    {userName}
-                                </Typography>
-                            </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                            >
-                                <MenuItem onClick={handleGetInfo} style={{ width: 200 }}>โปรไฟล์</MenuItem>
-                                <MenuItem onClick={handleLogout} style={{ width: 200 }}>ออกจากระบบ</MenuItem>
-                            </Menu>
-                        </>
-                    ) : <FacebookLogin
-                        appId={config.FACEBOOK_APP_ID}
-                        callback={responseFacebook}
-                        render={renderProps => (<Button variant="outlined" color="white" onClick={renderProps.onClick}>
-                            <FacebookRoundedIcon sx={{ mr: 1 }} /> เข้าสู่ระบบด้วย Facebook
-                        </Button>
-                        )}
+                    <TextField
+                        sx={{ width: '30%' }}
+                        id="search-outlined-textarea"
+                        size='small'
+                        placeholder="แคปชั่น"
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <SearchIcon />
+                                </InputAdornment>
+                            ),
+                        }}
                     />
-                    }
+                    <Box >
+                        {auth ? (
+                            <>
+                                <UploadButton />
+                                <IconButton
+                                    size="small"
+                                    aria-label="account of current user"
+                                    aria-controls="menu-appbar"
+                                    aria-haspopup="true"
+                                    onClick={handleMenu}
+                                    color="inherit"
+                                >
+                                    <Avatar
+                                        alt={userName}
+                                        src={userImagePath}
+                                        sx={{ width: 50, height: 50, mx: 1 }}
+                                    >
+                                        {userName[0]} {/* สำหรับเมื่อไม่สามารถโหลดรูปได้ */}
+                                    </Avatar>
+                                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} >
+                                        {userName}
+                                    </Typography>
+                                </IconButton>
+                                <Menu
+                                    id="menu-appbar"
+                                    anchorEl={anchorEl}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'right',
+                                    }}
+                                    keepMounted
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    open={Boolean(anchorEl)}
+                                    onClose={handleClose}
+                                >
+                                    <MenuItem onClick={handleGetInfo} style={{ width: 200 }}>โปรไฟล์</MenuItem>
+                                    <MenuItem onClick={handleLogout} style={{ width: 200 }}>ออกจากระบบ</MenuItem>
+                                </Menu>
+                            </>
+                        ) : <FacebookLogin
+                            appId={config.FACEBOOK_APP_ID}
+                            callback={responseFacebook}
+                            render={renderProps => (<Button variant="outlined" color="white" onClick={renderProps.onClick}>
+                                <FacebookRoundedIcon sx={{ mr: 1 }} /> เข้าสู่ระบบด้วย Facebook
+                            </Button>
+                            )}
+                        />
+                        }
+                    </Box>
                 </Toolbar>
             </AppBar >
         </Box >

@@ -58,16 +58,16 @@ export default function UploadButton(props) {
     return (
         <>
             <Tooltip title="Upload">
-                <IconButton
-                    size="small"
+                <Button
+                    variant="contained" startIcon={<UploadIcon />}
+                    size="medium"
                     aria-label="upload cat image here"
                     aria-haspopup="false"
-                    color="inherit"
-                    sx={{ mx: 1 }}
+                    sx={{ mx: 1, backgroundColor: "#00a152" }}
                     onClick={handleOpen}
                 >
-                    <UploadIcon />
-                </IconButton>
+                    โพสใหม่
+                </Button>
             </Tooltip>
             <Modal
                 open={open}
