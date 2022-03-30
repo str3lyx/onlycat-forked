@@ -25,24 +25,22 @@ const expressLogger = expressWinston.logger({ // default level is info
 })
 
 const logger = winston.createLogger({
-    level: 'error', // for production
+    level: 'info', // for production
     format: winston.format.json(),
     // defaultMeta: { service: 'user-service' },
-    transports: [
-        // dont write to file (for now)
-        // new winston.transports.File({ filename: 'error.log', level: 'error' }),
-        // new winston.transports.File({ filename: 'combined.log' }),
-    ],
 });
 
 if (process.env.NODE_ENV !== 'production') {
+    logger.level = 'debug'
     logger.add(new winston.transports.Console({
         format: winston.format.combine(
             winston.format.colorize(),
             winston.format.simple()
         ),
     }))
-    logger.level = 'debug'
+} else {
+    logger.add(new winston.transports.File({ filename: 'log/error.log', level: 'error' }))
+    logger.add(new winston.transports.File({ filename: 'log/out.log' }))
 }
 
 module.exports = { logger, expressLogger };

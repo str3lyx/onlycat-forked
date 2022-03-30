@@ -23,7 +23,7 @@ db.on('reconnected', function () {
     logger.info('MongoDB reconnected!');
 });
 db.on('connected', function () {
-    console.log('MongoDB connected!');
+    logger.info('MongoDB connected!');
 });
 db.on('connecting', function () {
     logger.debug('connecting to MongoDB...');

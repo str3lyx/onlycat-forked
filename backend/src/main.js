@@ -184,7 +184,7 @@ app.get('/api/info', authenticated, async (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    logger.info(`Example app listening on port ${port}`)
 })
 
 // ----------------------------- utils ----------------------------------------- //
