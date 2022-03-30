@@ -63,7 +63,12 @@ export default function UploadButton(props) {
                     size="medium"
                     aria-label="upload cat image here"
                     aria-haspopup="false"
-                    sx={{ mx: 1, backgroundColor: "#00a152" }}
+                    sx={{
+                        mx: 1, backgroundColor: "#00cc52",
+                        '&:hover': {
+                            backgroundColor: '#00ba4b',
+                        },
+                    }}
                     onClick={handleOpen}
                 >
                     โพสใหม่

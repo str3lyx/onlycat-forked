@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
@@ -14,6 +13,8 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Link from '@mui/material/Link';
+import Tooltip from '@mui/material/Tooltip';
+import ShuffleIcon from '@mui/icons-material/Shuffle';
 
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
@@ -59,6 +60,14 @@ export default function MenuAppBar(props) {
         window.location.reload(false) // (false for refresh and using cached)
     }
 
+    const randomCat = () => {
+        axios.get(`${config.apiUrlPrefix}/random/cat`)
+            .then((res) => {
+                window.open(res.data)
+            }).catch((err) => {
+                alert('เกิดข้อผิดผลาด โปรดลองใหม่อีกครั้ง')
+            })
+    }
     React.useEffect(() => {
         if (auth) {
             handleSetInfo()
@@ -109,6 +118,24 @@ export default function MenuAppBar(props) {
                         }}
                     />
                     <Box >
+                        <Tooltip title="Random">
+                            <Button
+                                variant="contained" startIcon={<ShuffleIcon />}
+                                aria-label="randome cat button"
+                                aria-haspopup="false"
+                                sx={{
+                                    mx: 1,
+                                    backgroundColor: "#ca88cb",
+                                    color: '#FFFFFF',
+                                    '&:hover': {
+                                        backgroundColor: '#be73bf',
+                                    },
+                                }}
+                                onClick={randomCat}
+                            >
+                                สุ่มรูปน้องแมว
+                            </Button>
+                        </Tooltip>
                         {auth ? (
                             <>
                                 <UploadButton />

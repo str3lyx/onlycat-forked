@@ -54,6 +54,12 @@ app.get('/api/data/post/:_id?', async (req, res) => {
 }
 )
 
+app.get('/api/random/cat', async (req, res) => {
+    let result = await axios.get('https://api.thecatapi.com/v1/images/search?format=json&limit=1')
+    // logger.info(result.data[0])
+    res.send(result.data[0].url)
+})
+
 app.post('/api/react', [authenticated, bodyParser.json()], async (req, res) => {
     let postId = req.body.postId
     let reaction = req.body.reaction
