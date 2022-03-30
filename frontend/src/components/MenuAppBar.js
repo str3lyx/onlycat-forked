@@ -60,6 +60,13 @@ export default function MenuAppBar(props) {
         window.location.reload(false) // (false for refresh and using cached)
     }
 
+    const handleSearchData = (e) => {
+        // console.log("key: ", e.key)
+        if (e.key === "Enter") { // Enter pressed
+            props.setSearchData(e.target.value)
+        }
+    }
+
     const randomCat = () => {
         axios.get(`${config.apiUrlPrefix}/random/cat`)
             .then((res) => {
@@ -108,7 +115,8 @@ export default function MenuAppBar(props) {
                         sx={{ width: '30%' }}
                         id="search-outlined-textarea"
                         size='small'
-                        placeholder="แคปชั่น"
+                        placeholder="แคปชั่น cat big brown"
+                        onKeyUp={handleSearchData}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">

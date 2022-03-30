@@ -9,12 +9,12 @@ function ImageBoard(props) {
   const [data, setData] = React.useState([])
 
   React.useEffect(() => {
-    axios.get(`${config.apiUrlPrefix}/data/post`)
+    axios.get(`${config.apiUrlPrefix}/data/post?search=${props.searchData}`)
       .then((res) => {
         setData(res.data)
         // console.log("board ", res.data)
       })
-  }, [])
+  }, [props.searchData])
 
   return (
     <Grid container spacing={2}

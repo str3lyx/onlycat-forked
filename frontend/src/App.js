@@ -40,16 +40,22 @@ axios.interceptors.request.use(function (config) {
 function App() {
 
   const [user, setUserData] = React.useState(null)
+  const [searchData, setSearchData] = React.useState("")
 
   const userData = (data) => {
     setUserData(data)
     // console.log(data)
   }
 
+  const setSearchDataCallback = (data) => {
+    setSearchData(data)
+    // console.log(data)
+  }
+
   return (
     <ThemeProvider theme={theme}>
-      <MenuAppBar userData={userData} />
-      <ImageBoard user={user} />
+      <MenuAppBar userData={userData} setSearchData={setSearchDataCallback} />
+      <ImageBoard user={user} searchData={searchData} />
     </ThemeProvider>
   );
 }
