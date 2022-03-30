@@ -9,7 +9,6 @@ services:
       - mongodb
     networks:
       - onlycat
-    command: node src/main.js
 
   frontend:
     build: ./frontend
