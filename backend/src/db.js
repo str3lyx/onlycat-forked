@@ -30,6 +30,10 @@ db.on('connecting', function () {
 });
 connectMongodb()
 
+process.on('SIGINT', function () { // close db on pm2 shutdown
+    db.close()
+});
+
 const User = model("User", Schema({
     id: { type: String, required: true }, // id from oauth
     name: { type: String, required: true },

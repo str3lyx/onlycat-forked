@@ -40,7 +40,7 @@ if (process.env.NODE_ENV !== 'production') {
     }))
 } else {
     logger.add(new winston.transports.File({ filename: 'log/error.log', level: 'error' }))
-    logger.add(new winston.transports.File({ filename: 'log/out.log' }))
+    logger.add(new winston.transports.File({ filename: 'log/out.log', level: 'info' }))
 }
 
 module.exports = { logger, expressLogger };
