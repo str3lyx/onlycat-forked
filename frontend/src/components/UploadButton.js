@@ -10,18 +10,7 @@ import TextField from '@mui/material/TextField';
 
 import axios from 'axios';
 import config from '../config';
-
-const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '',
-    boxShadow: 24,
-    p: 5,
-};
+import style from '../styleEngine'
 
 export default function UploadButton(props) {
     const [open, setOpen] = React.useState(false);
@@ -56,18 +45,13 @@ export default function UploadButton(props) {
 
     return (
         <>
-            <Tooltip title="Upload">
+            <Tooltip title="สร้างโพสต์ของน้องแมว">
                 <Button
                     variant="contained" startIcon={<UploadIcon />}
                     size="medium"
                     aria-label="upload cat image here"
                     aria-haspopup="false"
-                    sx={{
-                        mx: 1, backgroundColor: "#00cc52",
-                        '&:hover': {
-                            backgroundColor: '#00ba4b',
-                        },
-                    }}
+                    sx={style.btnUpload}
                     onClick={handleOpen}
                 >
                     โพสใหม่
@@ -79,7 +63,7 @@ export default function UploadButton(props) {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={modalStyle}>
+                <Box sx={style.modal}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
                         สร้างโพสรูปภาพแมวๆ
                     </Typography>
@@ -93,26 +77,24 @@ export default function UploadButton(props) {
                         autoComplete="off"
                     >
                         <Typography id="modal-modal-description" sx={{ mt: 2, mb: 5 }} component='div'>
-                            <div>
-                                <Button
-                                    variant="contained"
-                                    component="label"
-                                >
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        id="upload-button-file"
-                                        name="file"
-                                        onChange={(e) => {
-                                            setSelectedFile(e.target.files[0])
-                                        }}
-                                        hidden
-                                    />
-                                    <UploadIcon /><Box sx={{ ml: 1 }} style={{ wordWrap: "break-word" }}>
-                                        {selectedFile ? selectedFile.name : "อัพโหลดรูปภาพ"}
-                                    </Box>
-                                </Button>
-                            </div>
+                            <Button
+                                variant="contained"
+                                component="label"
+                            >
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    id="upload-button-file"
+                                    name="file"
+                                    onChange={(e) => {
+                                        setSelectedFile(e.target.files[0])
+                                    }}
+                                    hidden
+                                />
+                                <UploadIcon /><Box sx={{ ml: 1 }} style={{ wordWrap: "break-word" }}>
+                                    {selectedFile ? selectedFile.name : "อัพโหลดรูปภาพ"}
+                                </Box>
+                            </Button>
                             <div>
                                 <TextField
                                     id="caption-input"

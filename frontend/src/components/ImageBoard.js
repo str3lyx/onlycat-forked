@@ -12,7 +12,7 @@ function ImageBoard(props) {
   React.useEffect(() => {
     axios.get(`${config.apiUrlPrefix}/data/post?search=${props.searchData}`)
       .then((res) => {
-        setData(res.data)
+        setData(splitArray(res.data))
         // console.log("board ", res.data)
       })
   }, [props.searchData])
@@ -20,30 +20,54 @@ function ImageBoard(props) {
   return (
     <Box
       position="absolute"
-      sx={{backgroundColor:"#000000", width: '90%', minHeight: `calc(100% - ${style.topbar.main.height})`, boxSizing: 'border-box'}}
-      mx="5%"
-      px="20px"
-      py="20px"
+      sx={style.dashBoard}
     >
-      <Grid container spacing={2}
-        sx={{ width: '100%' }}
-      >
-        {
-          data.length > 0 ? (
-            data.map((data) => {
-              <Grid item xs={3} key={"GridImagePost-" + data._id}>
-                <ImagePost postId={data._id} user={props.user} />
-              </Grid>
-            })
-          ):(
-            <Grid item xs={12} key='noData'>
-              <Box sx={{color: '#ffffff'}}>ดูเหมือนว่าจะยังไม่มีคนโพสต์อะไรลงเลยนะ</Box>
+      {
+        data.length > 0 ? (
+          <Grid container spacing="15px" sx={{px: "15px"}}>
+            <Grid item xs={3}>
+              {
+                data[0].map((data) => {
+                  return <ImagePost postId={data._id} user={props.user} />
+                })
+              }
             </Grid>
-          )
-        }
-      </Grid>
+            <Grid item xs={3}>
+              {
+                data[1].map((data) => {
+                  return <ImagePost postId={data._id} user={props.user} />
+                })
+              }
+            </Grid>
+            <Grid item xs={3}>
+              {
+                data[2].map((data) => {
+                  return <ImagePost postId={data._id} user={props.user} />
+                })
+              }
+            </Grid>
+            <Grid item xs={3}>
+              {
+                data[3].map((data) => {
+                  return <ImagePost postId={data._id} user={props.user} />
+                })
+              }
+            </Grid>
+          </Grid>
+        ) : <Box sx={{color: '#ffffff'}}>ดูเหมือนว่าจะยังไม่มีคนโพสต์อะไรลงเลยนะ</Box>
+      }
     </Box>
   )
 }
 
 export default ImageBoard
+
+function splitArray(arr)
+{
+  var cols = [[],[],[],[]]
+  for(var i in arr)
+  {
+    cols[i%4].push(arr[i])
+  }
+  return cols
+}

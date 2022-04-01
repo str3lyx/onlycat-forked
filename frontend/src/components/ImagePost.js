@@ -3,6 +3,7 @@ import { Typography, Avatar, Button, Box, Grid } from '@mui/material'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import config from '../config';
+import style from '../styleEngine'
 
 const axios = require('axios')
 
@@ -49,58 +50,24 @@ function ImagePost(props) {
   }
 
   return (
-    <Box mx={0} my={0} sx={{ borderRadius: '12px', backgroundColor: '#3d3d3d' }}>
-      {postData ? postData.post.author != null ?
-        <Grid container width="100%" px={1} spacing={1} marginBottom={1}>
-          <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <Box mx={0} my={0} sx={style.post.cardBorder}>
+      {postData &&
+        <Box sx={style.post.cardDetail.main}>
+          <Box>
             <Avatar
-              alt={postData.post.author.name}
-              src={postData.post.author.pictureUrl}
+              sx={style.post.cardDetail.picture}
+              alt={getAuthorName(postData)}
+              src={getAuthorProfilePic(postData)}
             >
-              {postData.post.author.pictureUrl === '' ? postData.post.author.name[0] : ''}
+              { postData.post.author ? (postData.post.author.pictureUrl === '' ? postData.post.author.name[0] : '') : '?' }
             </Avatar>
-          </Grid>
-          <Grid item xs={10} sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box component="div">
-              <Typography
-                sx={{ color: '#ffffff', fontWeight: 600 }}
-              >
-                {postData.post.author.name === '' || !postData.post.author.name ? '\u00a0' : postData.post.author.name}
-              </Typography>
-              <Typography
-                sx={{ color: '#cecece', fontSize: 10 }}
-                style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}
-              >
-                {"โพสวันที่: " + new Date(postData.post.author.createdAt).toLocaleDateString()}
-                <br />
-                {" เวลา: " + new Date(postData.post.author.createdAt).toLocaleTimeString()}
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid> : // if author is null
-        <Grid container width="100%" px={1} spacing={1} marginBottom={1}>
-          <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Avatar
-              alt="Unknow User"
-            >
-            </Avatar>
-          </Grid>
-          <Grid item xs={10} sx={{ display: 'flex', alignItems: 'center' }}>
-            <Box component="div">
-              <Typography
-                sx={{ color: '#ffffff', fontWeight: 600 }}
-              >
-                Unknow
-              </Typography>
-              <Typography
-                sx={{ color: '#cecece', fontSize: 10 }}
-                style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}
-              >
-                -
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid> : ''
+          </Box>
+          <Box>
+            <Typography sx={style.post.cardDetail.author}>{getAuthorName(postData)}</Typography>
+            <Typography sx={style.post.cardDetail.date}>{"โพสวันที่: " + getPostDate(postData)}</Typography>
+            <Typography sx={style.post.cardDetail.date}>{"เวลา: " + getPostTime(postData)}</Typography>
+          </Box>
+        </Box>
       }
       <Box
         component="img"
@@ -159,3 +126,31 @@ function ImagePost(props) {
 }
 
 export default ImagePost
+
+// -------------------------------------------------------------------------------- //
+
+function getAuthorName(postData)
+{
+  if(!postData.post.author) return 'Unknown User'
+  if(postData.post.author.name === '' || !postData.post.author.name) return '\u00a0'; // &nbsp
+  return postData.post.author.name
+}
+
+function getAuthorProfilePic(postData)
+{
+  if(postData.post.author) return ''
+  if(!postData.post.author.pictureUrl) return ''
+  return postData.post.author.pictureUrl
+}
+
+function getPostDate(postData)
+{
+  if(postData.post.author) return '-----'
+  return new Date(postData.post.author.createdAt).toLocaleDateString()
+}
+
+function getPostTime(postData)
+{
+  if(postData.post.author) return '-----'
+  return new Date(postData.post.author.createdAt).toLocaleTimeString()
+}

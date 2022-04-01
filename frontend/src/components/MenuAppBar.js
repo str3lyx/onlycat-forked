@@ -37,8 +37,7 @@ export default function MenuAppBar(props) {
                 setuserImagePath(result.data.pictureUrl)
             })
             .catch((err) => {
-                handleLogout()
-                window.location.reload()
+                // handleLogout()
             })
     }
 
@@ -84,97 +83,94 @@ export default function MenuAppBar(props) {
     }
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            {/* style={{ background: 'transparent', boxShadow: 'none' }} */}
-            <AppBar position="static" sx={style.topbar.main} >
-                <Toolbar
-                    sx={style.topbar.toolbar}>
-                    <Typography variant="h6" component="div">
-                        <Link href="/" color="inherit" sx={style.mainLogo}>
-                            ONLY CAT
-                        </Link>
-                    </Typography>
-                    <TextField
-                        sx={style.searchBar.main}
-                        variant="outlined"
-                        id="search-outlined-textarea"
-                        size='small'
-                        placeholder="แคปชั่น cat big brown"
-                        onKeyUp={handleSearchData}
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <SearchIcon />
-                                </InputAdornment>
-                            ),
-                            style: style.searchBar.input
-                        }}
-                    />
-                    <Box >
-                        { auth && <UploadButton /> }
-                        <Tooltip title="คลิกเพื่อเปิดสุ่มรูปน้องแมว">
-                            <Button
-                                variant="contained" startIcon={<ShuffleIcon />}
-                                aria-label="randome cat button"
-                                aria-haspopup="false"
-                                sx={style.btnRandom}
-                                onClick={randomCat}
+        <AppBar sx={style.topbar.main} >
+            <Toolbar
+                sx={style.topbar.toolbar}>
+                <Typography variant="h6" component="div">
+                    <Link href="/" color="inherit" sx={style.mainLogo}>
+                        ONLY CAT
+                    </Link>
+                </Typography>
+                <TextField
+                    sx={style.searchBar.main}
+                    variant="outlined"
+                    id="search-outlined-textarea"
+                    size='small'
+                    placeholder="แคปชั่น cat big brown"
+                    onKeyUp={handleSearchData}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <SearchIcon />
+                            </InputAdornment>
+                        ),
+                        style: style.searchBar.input
+                    }}
+                />
+                <Box>
+                    <Tooltip title="คลิกเพื่อเปิดสุ่มรูปน้องแมว">
+                        <Button
+                            variant="contained" startIcon={<ShuffleIcon />}
+                            aria-label="randome cat button"
+                            aria-haspopup="false"
+                            sx={style.btnRandom}
+                            onClick={randomCat}
+                        >
+                            สุ่มรูปน้องแมว
+                        </Button>
+                    </Tooltip>
+                    {auth ? (
+                        <>
+                            <UploadButton />
+                            <IconButton
+                                size="small"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleMenu}
+                                color="inherit"
                             >
-                                สุ่มรูปน้องแมว
-                            </Button>
-                        </Tooltip>
-                        {auth ? (
-                            <>
-                                <IconButton
-                                    size="small"
-                                    aria-label="account of current user"
-                                    aria-controls="menu-appbar"
-                                    aria-haspopup="true"
-                                    onClick={handleMenu}
-                                    color="inherit"
+                                <Avatar
+                                    alt={userName}
+                                    src={userImagePath}
+                                    sx={style.userProfile.pic}
                                 >
-                                    <Avatar
-                                        alt={userName}
-                                        src={userImagePath}
-                                        sx={style.userProfile.pic}
-                                    >
-                                        {userName[0]} {/* สำหรับเมื่อไม่สามารถโหลดรูปได้ */}
-                                    </Avatar>
-                                    <Typography variant="h6" component="div" sx={style.userProfile.name} >
-                                        {userName}
-                                    </Typography>
-                                </IconButton>
-                                <Menu
-                                    id="menu-appbar"
-                                    anchorEl={anchorEl}
-                                    anchorOrigin={{
-                                        vertical: 'bottom',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(anchorEl)}
-                                    onClose={handleClose}
-                                >
-                                    <MenuItem onClick={handleGetInfo} style={style.userProfile.submenu.main}>โปรไฟล์</MenuItem>
-                                    <MenuItem onClick={handleLogout} sx={style.userProfile.submenu.main}>ออกจากระบบ</MenuItem>
-                                </Menu>
-                            </>
-                        ) : <FacebookLogin
-                            appId={config.FACEBOOK_APP_ID}
-                            callback={responseFacebook}
-                            render={renderProps => (<Button variant="outlined" color="white" onClick={renderProps.onClick}>
-                                <FacebookRoundedIcon sx={style.btnFbLogin} /> เข้าสู่ระบบด้วย Facebook
-                            </Button>
-                            )}
-                        />
-                        }
-                    </Box>
-                </Toolbar>
-            </AppBar >
-        </Box >
+                                    {userName[0]} {/* สำหรับเมื่อไม่สามารถโหลดรูปได้ */}
+                                </Avatar>
+                                <Typography variant="h6" component="div" sx={style.userProfile.name} >
+                                    {userName}
+                                </Typography>
+                            </IconButton>
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
+                                <MenuItem onClick={handleGetInfo} style={style.userProfile.submenu.main}>โปรไฟล์</MenuItem>
+                                <MenuItem onClick={handleLogout} sx={style.userProfile.submenu.main}>ออกจากระบบ</MenuItem>
+                            </Menu>
+                        </>
+                    ) : <FacebookLogin
+                        appId={config.FACEBOOK_APP_ID}
+                        callback={responseFacebook}
+                        render={renderProps => (<Button variant="outlined" color="white" onClick={renderProps.onClick}>
+                            <FacebookRoundedIcon sx={style.btnFbLogin} /> เข้าสู่ระบบด้วย Facebook
+                        </Button>
+                        )}
+                    />
+                    }
+                </Box>
+            </Toolbar>
+        </AppBar>
     );
 }
