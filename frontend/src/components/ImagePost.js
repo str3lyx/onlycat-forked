@@ -75,52 +75,25 @@ function ImagePost(props) {
         alt=""
         sx={{ width: '100%', height: 'auto' }}
       />
-      <Typography
-        sx={{ color: '#FFFFFF' }}
-        px={1}
-      >
-        {postData ? postData.post.caption : ''}
-      </Typography>
-      <Grid container>
-        <Grid item xs={6}>
-          <Button
-            onClick={(e) => onBtnReaction_click('like')}
-            sx={{
-              backgroundColor: '#4d4d4d',
-              color: `${react === 'like' ? '#00ff00' : '#ffffff'}`,
-              width: '100%',
-              borderTopLeftRadius: 0, borderTopRightRadius: 0,
-              borderBottomLeftRadius: '12px', borderBottomRightRadius: 0,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
-            mx={0}
-          >
-            <ThumbUpIcon />
-            <Typography mx={1}>
-              {postData ? postData.post.reaction.like.length : 0}
-            </Typography>
-          </Button>
-        </Grid>
-        <Grid item xs={6}>
-          <Button
-            onClick={(e) => onBtnReaction_click('dislike')}
-            sx={{
-              backgroundColor: '#4d4d4d',
-              color: `${react === 'dislike' ? '#ff0000' : '#ffffff'}`,
-              width: '100%',
-              borderTopLeftRadius: 0, borderTopRightRadius: 0,
-              borderBottomLeftRadius: 0, borderBottomRightRadius: '12px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center'
-            }}
-            mx={0}
-          >
-            <ThumbDownIcon />
-            <Typography mx={1}>
-              {postData ? postData.post.reaction.disLike.length : 0}
-            </Typography>
-          </Button>
-        </Grid>
-      </Grid>
+      <Typography sx={style.post.cardCaption}>{postData ? postData.post.caption : ''}</Typography>
+      <Box sx={style.post.cardReaction.main}>
+        <Button
+          onClick={(e) => onBtnReaction_click('like')}
+          sx={react === 'like' ? style.post.cardReaction.btnLike.active : style.post.cardReaction.btnLike.main}
+          mx={0}
+        >
+          <ThumbUpIcon />
+          <Typography mx={1}>{postData ? postData.post.reaction.like.length : 0}</Typography>
+        </Button>
+        <Button
+          onClick={(e) => onBtnReaction_click('dislike')}
+          sx={react === 'dislike' ? style.post.cardReaction.btnDislike.active : style.post.cardReaction.btnDislike.main}
+          mx={0}
+        >
+          <ThumbDownIcon />
+          <Typography mx={1}>{postData ? postData.post.reaction.disLike.length : 0}</Typography>
+        </Button>
+      </Box>
     </Box >
   )
 }

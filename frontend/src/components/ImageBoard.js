@@ -25,34 +25,11 @@ function ImageBoard(props) {
       {
         data.length > 0 ? (
           <Grid container spacing="15px" sx={{px: "15px"}}>
-            <Grid item xs={3}>
-              {
-                data[0].map((data) => {
-                  return <ImagePost postId={data._id} user={props.user} />
-                })
-              }
-            </Grid>
-            <Grid item xs={3}>
-              {
-                data[1].map((data) => {
-                  return <ImagePost postId={data._id} user={props.user} />
-                })
-              }
-            </Grid>
-            <Grid item xs={3}>
-              {
-                data[2].map((data) => {
-                  return <ImagePost postId={data._id} user={props.user} />
-                })
-              }
-            </Grid>
-            <Grid item xs={3}>
-              {
-                data[3].map((data) => {
-                  return <ImagePost postId={data._id} user={props.user} />
-                })
-              }
-            </Grid>
+            {
+              data.map((col) => {
+                return renderColumn(col, props.user)
+              })
+            }
           </Grid>
         ) : <Box sx={{color: '#ffffff'}}>ดูเหมือนว่าจะยังไม่มีคนโพสต์อะไรลงเลยนะ</Box>
       }
@@ -70,4 +47,19 @@ function splitArray(arr)
     cols[i%4].push(arr[i])
   }
   return cols
+}
+
+function renderColumn(col, user)
+{
+  return <Grid item xs={3}>
+    <Grid container spacing="15px">
+    {
+      col.map((data) => {
+        return <Grid item xs={12}>
+          <ImagePost postId={data._id} user={user} />
+        </Grid>
+      })
+    }
+    </Grid>
+  </Grid>
 }

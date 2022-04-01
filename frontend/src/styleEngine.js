@@ -33,6 +33,38 @@ const searchBar = {
     }
 }
 
+const modal = {
+    mx: "auto",
+    my: "20vh",
+    width: "45vw",
+    height: "60vh",
+    bgcolor: 'background.paper',
+    border: '',
+    borderRadius: '12px',
+    boxShadow: 24,
+    padding: 3,
+    boxSizing: 'border-box',
+}
+
+const uploader = {
+    active: {
+        height: `calc(${modal.height}/2)`,
+        boxSizing: 'border-box',
+        position: 'relative',
+        cursor: 'pointer',
+        //backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat'
+    },
+    disactive: {
+        width: '100%',
+        height: `calc(${modal.height}/2)`,
+        border: '5px dashed red',
+        boxSizing: 'border-box',
+        borderRadius: '12px',
+        cursor: 'pointer'
+    }
+}
+
 const style = {
     topbar: topbar,
     mainLogo: mainLogo,
@@ -70,21 +102,32 @@ const style = {
             backgroundColor: '#00ba4b',
         }
     },
-    modal: {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 400,
-        bgcolor: 'background.paper',
-        border: '',
-        boxShadow: 24,
-        p: 5,
+    modal: modal,
+    upload: {
+        main: uploader,
+        caption: {
+            main: {
+                width: "100%",
+            },
+            input: {
+                backgroundColor: '#ff0000'
+            }
+        },
+        fileName: {
+            position: 'absolute',
+            left: 0,
+            bottom: 0,
+            wordWrap: "break-word",
+            display: "inline-block",
+            backgroundColor: 'rgba(0,0,0,0.7)',
+            color: '#ffffff',
+            padding: "3px"
+        }
     },
     dashBoard: {
         backgroundColor:"#000000",
         width: '90%',
-        minHeight: `calc(100% - ${topbar.main.height})`,
+        minHeight: `calc(100vh - ${topbar.main.height})`,
         boxSizing: 'border-box',
         marginTop: topbar.main.height,
         mx: '5%',
@@ -103,6 +146,58 @@ const style = {
             picture: {width: '50px', height: '50px', marginRight: '7px'},
             author: { color: '#ffffff', fontWeight: 600 },
             date: { color: '#cecece', fontSize: 10 }
+        },
+        cardCaption: {
+            color: '#FFFFFF',
+            padding: '3px'
+        },
+        cardReaction: {
+            main: {
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            },
+            btnLike: {
+                main: {
+                    backgroundColor: '#4d4d4d',
+                    color: '#ffffff',
+                    width: '50%',
+                    borderTopLeftRadius: 0, borderTopRightRadius: 0,
+                    borderBottomLeftRadius: '12px', borderBottomRightRadius: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    wordWrap: "break-word"
+                },
+                active: {
+                    backgroundColor: '#4d4d4d',
+                    color: '#00ff00',
+                    width: '50%',
+                    borderTopLeftRadius: 0, borderTopRightRadius: 0,
+                    borderBottomLeftRadius: '12px', borderBottomRightRadius: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    wordWrap: "break-word"
+                }
+            },
+            btnDislike: {
+                main: {
+                    backgroundColor: '#4d4d4d',
+                    color: '#ffffff',
+                    width: '50%',
+                    borderTopLeftRadius: 0, borderTopRightRadius: 0,
+                    borderBottomLeftRadius: 0, borderBottomRightRadius: '12px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    wordWrap: "break-word"
+                },
+                active: {
+                    backgroundColor: '#4d4d4d',
+                    color: '#ff0000',
+                    width: '50%',
+                    borderTopLeftRadius: 0, borderTopRightRadius: 0,
+                    borderBottomLeftRadius: 0, borderBottomRightRadius: '12px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    wordWrap: "break-word"
+                }
+            }
         }
     }
 }
