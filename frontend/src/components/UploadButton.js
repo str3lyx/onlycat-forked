@@ -4,7 +4,6 @@ import UploadIcon from '@mui/icons-material/Upload';
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import TextField from '@mui/material/TextField';

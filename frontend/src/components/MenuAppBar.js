@@ -1,24 +1,13 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
+import {AppBar,Box,IconButton,Toolbar,Typography,Button,MenuItem,Menu,Avatar,TextField,InputAdornment,Link,Tooltip} from '@mui/material';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
-import Avatar from '@mui/material/Avatar';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import Link from '@mui/material/Link';
-import Tooltip from '@mui/material/Tooltip';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
 import config from '../config';
+import style from '../styleEngine.js'
 import UploadButton from './UploadButton';
 
 export default function MenuAppBar(props) {
@@ -97,22 +86,16 @@ export default function MenuAppBar(props) {
     return (
         <Box sx={{ flexGrow: 1 }}>
             {/* style={{ background: 'transparent', boxShadow: 'none' }} */}
-            <AppBar position="static" >
+            <AppBar position="static" sx={style.topbar.main} >
                 <Toolbar
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                    }}>
+                    sx={style.topbar.toolbar}>
                     <Typography variant="h6" component="div">
-                        <Link href="/" color="inherit" sx={{
-                            textDecoration: 'none', fontWidth: 'bold',
-                            fontSize: 30,
-                        }}>
+                        <Link href="/" color="inherit" sx={style.mainLogo}>
                             ONLY CAT
                         </Link>
                     </Typography>
                     <TextField
-                        sx={{ width: '30%' }}
+                        sx={style.searchBar.main}
                         variant="outlined"
                         id="search-outlined-textarea"
                         size='small'
@@ -124,25 +107,17 @@ export default function MenuAppBar(props) {
                                     <SearchIcon />
                                 </InputAdornment>
                             ),
-                            style: {
-                                backgroundColor: '#ffffff'
-                            }
+                            style: style.searchBar.input
                         }}
                     />
                     <Box >
-                        <Tooltip title="คลิกเพื่อเปิดหน้าต่างดูรูปน้องแมว">
+                        { auth && <UploadButton /> }
+                        <Tooltip title="คลิกเพื่อเปิดสุ่มรูปน้องแมว">
                             <Button
                                 variant="contained" startIcon={<ShuffleIcon />}
                                 aria-label="randome cat button"
                                 aria-haspopup="false"
-                                sx={{
-                                    mx: 1,
-                                    backgroundColor: "#ca88cb",
-                                    color: '#FFFFFF',
-                                    '&:hover': {
-                                        backgroundColor: '#be73bf',
-                                    },
-                                }}
+                                sx={style.btnRandom}
                                 onClick={randomCat}
                             >
                                 สุ่มรูปน้องแมว
@@ -150,7 +125,6 @@ export default function MenuAppBar(props) {
                         </Tooltip>
                         {auth ? (
                             <>
-                                <UploadButton />
                                 <IconButton
                                     size="small"
                                     aria-label="account of current user"
@@ -162,11 +136,11 @@ export default function MenuAppBar(props) {
                                     <Avatar
                                         alt={userName}
                                         src={userImagePath}
-                                        sx={{ width: 50, height: 50, mx: 1 }}
+                                        sx={style.userProfile.pic}
                                     >
                                         {userName[0]} {/* สำหรับเมื่อไม่สามารถโหลดรูปได้ */}
                                     </Avatar>
-                                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} >
+                                    <Typography variant="h6" component="div" sx={style.userProfile.name} >
                                         {userName}
                                     </Typography>
                                 </IconButton>
@@ -185,15 +159,15 @@ export default function MenuAppBar(props) {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                 >
-                                    <MenuItem onClick={handleGetInfo} style={{ width: 200 }}>โปรไฟล์</MenuItem>
-                                    <MenuItem onClick={handleLogout} style={{ width: 200 }}>ออกจากระบบ</MenuItem>
+                                    <MenuItem onClick={handleGetInfo} style={style.userProfile.submenu.main}>โปรไฟล์</MenuItem>
+                                    <MenuItem onClick={handleLogout} sx={style.userProfile.submenu.main}>ออกจากระบบ</MenuItem>
                                 </Menu>
                             </>
                         ) : <FacebookLogin
                             appId={config.FACEBOOK_APP_ID}
                             callback={responseFacebook}
                             render={renderProps => (<Button variant="outlined" color="white" onClick={renderProps.onClick}>
-                                <FacebookRoundedIcon sx={{ mr: 1 }} /> เข้าสู่ระบบด้วย Facebook
+                                <FacebookRoundedIcon sx={style.btnFbLogin} /> เข้าสู่ระบบด้วย Facebook
                             </Button>
                             )}
                         />
