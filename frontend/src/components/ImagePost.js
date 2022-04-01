@@ -138,19 +138,19 @@ function getAuthorName(postData)
 
 function getAuthorProfilePic(postData)
 {
-  if(postData.post.author) return ''
+  if(!postData.post.author) return ''
   if(!postData.post.author.pictureUrl) return ''
   return postData.post.author.pictureUrl
 }
 
 function getPostDate(postData)
 {
-  if(postData.post.author) return '-----'
+  if(!postData.post.author) return '-----'
   return new Date(postData.post.author.createdAt).toLocaleDateString()
 }
 
 function getPostTime(postData)
 {
-  if(postData.post.author) return '-----'
+  if(!postData.post.author) return '-----'
   return new Date(postData.post.author.createdAt).toLocaleTimeString()
 }
