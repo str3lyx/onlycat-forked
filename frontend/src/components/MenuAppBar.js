@@ -113,6 +113,7 @@ export default function MenuAppBar(props) {
                     </Typography>
                     <TextField
                         sx={{ width: '30%' }}
+                        variant="outlined"
                         id="search-outlined-textarea"
                         size='small'
                         placeholder="แคปชั่น cat big brown"
@@ -123,10 +124,13 @@ export default function MenuAppBar(props) {
                                     <SearchIcon />
                                 </InputAdornment>
                             ),
+                            style: {
+                                backgroundColor: '#ffffff'
+                            }
                         }}
                     />
                     <Box >
-                        <Tooltip title="Random">
+                        <Tooltip title="คลิกเพื่อเปิดหน้าต่างดูรูปน้องแมว">
                             <Button
                                 variant="contained" startIcon={<ShuffleIcon />}
                                 aria-label="randome cat button"

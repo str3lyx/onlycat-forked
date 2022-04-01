@@ -1,6 +1,6 @@
 import * as React from 'react'
 import ImagePost from './ImagePost'
-import { Grid } from '@mui/material'
+import { Grid, Box } from '@mui/material'
 import config from '../config';
 
 const axios = require('axios')
@@ -22,13 +22,17 @@ function ImageBoard(props) {
       m='auto'
     >
       {
-        data.map((data) => {
-          return (
+        data.length > 0 ? (
+          data.map((data) => {
             <Grid item xs={3} key={"GridImagePost-" + data._id}>
               <ImagePost postId={data._id} user={props.user} />
             </Grid>
-          )
-        })
+          })
+        ):(
+          <Grid item xs={12} key='noData'>
+            <Box sx={{color: '#ffffff'}}>ดูเหมือนว่าจะยังไม่มีคนโพสต์อะไรลงเลยนะ</Box>
+          </Grid>
+        )
       }
     </Grid>
   )
