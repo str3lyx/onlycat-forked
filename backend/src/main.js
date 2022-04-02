@@ -200,7 +200,7 @@ app.post('/api/login', async (req, res) => {
             id: data.id,
             name: data.name,
             email: data.email,
-            pictureUrl: "",
+            pictureUrl: data.picture.data.url,
             createdAt: new Date(),
         }, function (err, result) {
             if (err) {
