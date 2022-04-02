@@ -42,9 +42,10 @@ app.get('/api/data/post/:_id?', async (req, res) => {
         post = { post, imageBase64: post.image.binData.toString('base64') }
         // logger.debug(post)
     } else {
-        // logger.debug(req.query.search.replace(/\s+/g, '|'))
         if (req.query.search) {
-            post = await models.Post.find({ caption: { "$regex": req.query.search.replace(/\s+/g, '|'), "$options": "i" } }).exec()
+            let regex = req.query.search.replace(/\\/g, "").replace(/\s+/g, '|') // remove "\"&space
+            // logger.debug(regex) 
+            post = await models.Post.find({ caption: { "$regex": regex, "$options": "i" } }, "_id").exec()
         } else
             post = await models.Post.find({}, '_id').exec()
         // logger.debug("all", post)

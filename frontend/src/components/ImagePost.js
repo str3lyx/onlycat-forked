@@ -13,7 +13,7 @@ function ImagePost(props) {
 
   React.useEffect(() => {
     updateData()
-  }, [])
+  }, [props.postId])
 
   const onBtnReaction_click = (react) => {
     if (sessionStorage.getItem('access_token') == null) {
@@ -33,7 +33,7 @@ function ImagePost(props) {
     // get image and user data
     axios.get(`${config.apiUrlPrefix}/data/post/${props.postId}`)
       .then((res) => {
-        // console.log(res.data)
+        // console.log(res.data._id)
         setPostData(res.data)
         setReactData('')
 
@@ -59,7 +59,7 @@ function ImagePost(props) {
               alt={getAuthorName(postData)}
               src={getAuthorProfilePic(postData)}
             >
-              { postData.post.author ? (postData.post.author.pictureUrl === '' ? postData.post.author.name[0] : '') : '?' }
+              {postData.post.author ? (postData.post.author.pictureUrl === '' ? postData.post.author.name[0] : '') : '?'}
             </Avatar>
           </Box>
           <Box>
@@ -102,28 +102,24 @@ export default ImagePost
 
 // -------------------------------------------------------------------------------- //
 
-function getAuthorName(postData)
-{
-  if(!postData.post.author) return 'Unknown User'
-  if(postData.post.author.name === '' || !postData.post.author.name) return '\u00a0'; // &nbsp
+function getAuthorName(postData) {
+  if (!postData.post.author) return 'Unknown User'
+  if (postData.post.author.name === '' || !postData.post.author.name) return '\u00a0'; // &nbsp
   return postData.post.author.name
 }
 
-function getAuthorProfilePic(postData)
-{
-  if(!postData.post.author) return ''
-  if(!postData.post.author.pictureUrl) return ''
+function getAuthorProfilePic(postData) {
+  if (!postData.post.author) return ''
+  if (!postData.post.author.pictureUrl) return ''
   return postData.post.author.pictureUrl
 }
 
-function getPostDate(postData)
-{
-  if(!postData.post.author) return '-----'
+function getPostDate(postData) {
+  if (!postData.post.author) return '-----'
   return new Date(postData.post.author.createdAt).toLocaleDateString()
 }
 
-function getPostTime(postData)
-{
-  if(!postData.post.author) return '-----'
+function getPostTime(postData) {
+  if (!postData.post.author) return '-----'
   return new Date(postData.post.author.createdAt).toLocaleTimeString()
 }
