@@ -1,8 +1,9 @@
 import * as React from 'react';
-import {AppBar,Box,IconButton,Toolbar,Typography,Button,MenuItem,Menu,Avatar,TextField,InputAdornment,Link,Tooltip} from '@mui/material';
+import { AppBar, Box, IconButton, Toolbar, Typography, Button, MenuItem, Menu, Avatar, TextField, InputAdornment, Link, Tooltip } from '@mui/material';
 import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
+import OauthPopup from 'react-oauth-popup';
 
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
@@ -68,6 +69,17 @@ export default function MenuAppBar(props) {
             handleSetInfo()
         }
     }, [auth])
+
+    const onSuccessPSUOauth = async (code, params) => {
+        // console.log(">>>>> a code", code, params);
+        let result = await axios.post(`${config.apiUrlPrefix}/login/psu`, { code })
+        sessionStorage.setItem('access_token', result.data.access_token)
+        setAuth(true)
+        window.location.reload()
+    }
+    const onClosePSUOauth = () => {
+        // do nothing..
+    };
 
     const responseFacebook = async (response) => {
         if (response.accessToken) {
@@ -160,14 +172,26 @@ export default function MenuAppBar(props) {
                                 <MenuItem onClick={handleLogout} sx={style.userProfile.submenu.main}>ออกจากระบบ</MenuItem>
                             </Menu>
                         </>
-                    ) : <FacebookLogin
-                        appId={config.FACEBOOK_APP_ID}
-                        callback={responseFacebook}
-                        render={renderProps => (<Button variant="outlined" color="white" onClick={renderProps.onClick}>
-                            <FacebookRoundedIcon sx={style.btnFbLogin} /> เข้าสู่ระบบด้วย Facebook
-                        </Button>
-                        )}
-                    />
+                    ) :
+                        <>
+                            <FacebookLogin
+                                appId={config.FACEBOOK_APP_ID}
+                                callback={responseFacebook}
+                                render={renderProps => (<Button variant="outlined" color="white" onClick={renderProps.onClick}>
+                                    <FacebookRoundedIcon sx={style.btnFbLogin} /> เข้าสู่ระบบด้วย Facebook
+                                </Button>
+                                )}
+                            />
+                            <Button variant="outlined" color="white" >
+                                <OauthPopup
+                                    url={`${config.PSUOauth.authorizeURL}?client_id=${config.PSUOauth.clientId}&redirect_uri=${config.PSUOauth.redirectURI}&response_type=code&state=${config.PSUOauth.state}`}
+                                    onCode={onSuccessPSUOauth}
+                                    onClose={onClosePSUOauth}
+                                >
+                                    login psu passport
+                                </OauthPopup>
+                            </Button>
+                        </>
                     }
                 </Box>
             </Toolbar>
