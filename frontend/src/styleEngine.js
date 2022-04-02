@@ -111,10 +111,11 @@ const style = {
     searchBar: searchBar,
     btnRandom: {
         mx: 1,
-        backgroundColor: "#ca88cb",
-        color: '#FFFFFF',
+        backgroundColor: "#E8139A",
+        color: 'white',
+        fontWeight: 'bold',
         '&:hover': {
-            backgroundColor: '#be73bf',
+            backgroundColor: '#DE1594',
         }
     },
     userProfile: {
@@ -137,7 +138,8 @@ const style = {
     },
     btnUpload: {
         mx: 1,
-        backgroundColor: "#00cc52",
+        backgroundColor: "#1BC861",
+        fontWeight: 'bold',
         '&:hover': {
             backgroundColor: '#00ba4b',
         }
@@ -222,7 +224,7 @@ const style = {
         }
     },
     dashBoard: {
-        backgroundColor:"#000000",
+        backgroundColor: "#000000",
         width: '90%',
         minHeight: `calc(100vh - ${topbar.main.height})`,
         boxSizing: 'border-box',
@@ -240,7 +242,7 @@ const style = {
                 justifyContent: 'flex-start',
                 alignItems: 'flex-end'
             },
-            picture: {width: '50px', height: '50px', marginRight: '7px'},
+            picture: { width: '50px', height: '50px', marginRight: '7px' },
             author: { color: '#ffffff', fontWeight: 600 },
             date: { color: '#cecece', fontSize: 10 }
         },
