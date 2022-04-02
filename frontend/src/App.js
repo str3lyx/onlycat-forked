@@ -1,7 +1,7 @@
 import * as React from 'react'
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { BrowserRouter as Router, Routes as Switch, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes as Switch, Route } from "react-router-dom";
 import Home from './pages/Home.js'
 import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
