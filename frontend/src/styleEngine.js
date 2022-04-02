@@ -8,7 +8,8 @@ const topbar = {
         alignItems: 'center',
         justifyContent: 'center',
         margin: 0,
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        background: 'linear-gradient(90deg, rgba(9,9,121,1) 40%, rgba(2,0,36,1) 100%)'
     },
     toolbar: {
         display: 'flex',
@@ -324,7 +325,7 @@ const style = {
         borderRadius: "2vmin"
     },
     profileHeader: {
-        backgroundColor: "#040059",
+        background: "linear-gradient(135deg, rgba(9,9,121,1) 40%, rgba(2,0,36,1) 100%)",
         borderTopLeftRadius: "12px",
         borderTopRightRadius: "0px",
         width: "100%",
