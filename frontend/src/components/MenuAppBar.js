@@ -8,6 +8,8 @@ import Modal from '@mui/material/Modal';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import PersonIcon from '@mui/icons-material/Person';
+import LoginIcon from '@mui/icons-material/Login';
 
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
@@ -193,7 +195,17 @@ export default function MenuAppBar(props) {
                         </>
                     ) :
                         <>
-                            <Button variant="outlined" color="white" onClick={handleOpenAuthModal}>เข้าสู่ระบบ</Button>
+                            <Button variant="contained" onClick={handleOpenAuthModal} startIcon={<LoginIcon />}
+                                sx={{
+                                    bgcolor: '#FFE356',
+                                    color: 'black',
+                                    fontWeight: 'bold',
+                                    '&:hover': {
+                                        backgroundColor: '#FFDB56',
+                                    }
+                                }}>
+                                เข้าสู่ระบบ
+                            </Button>
                             <Modal
                                 open={openAuthModal}
                                 onClose={handleCloseAuthModal}
@@ -235,7 +247,7 @@ export default function MenuAppBar(props) {
                                             </Button>
                                             )}
                                         />
-                                        <Button variant="outlined" color="red" >
+                                        <Button variant="outlined" color="red" startIcon={<PersonIcon />}>
                                             <OauthPopup
                                                 url={`${config.PSUOauth.authorizeURL}?client_id=${config.PSUOauth.clientId}&redirect_uri=${config.PSUOauth.redirectURI}&response_type=code&state=${config.PSUOauth.state}`}
                                                 onCode={onSuccessPSUOauth}

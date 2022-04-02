@@ -111,10 +111,11 @@ const style = {
     searchBar: searchBar,
     btnRandom: {
         mx: 1,
-        backgroundColor: "#ca88cb",
-        color: '#FFFFFF',
+        backgroundColor: "#E8139A",
+        color: 'white',
+        fontWeight: 'bold',
         '&:hover': {
-            backgroundColor: '#be73bf',
+            backgroundColor: '#DE1594',
         }
     },
     userProfile: {
@@ -137,7 +138,8 @@ const style = {
     },
     btnUpload: {
         mx: 1,
-        backgroundColor: "#00cc52",
+        backgroundColor: "#1BC861",
+        fontWeight: 'bold',
         '&:hover': {
             backgroundColor: '#00ba4b',
         }
