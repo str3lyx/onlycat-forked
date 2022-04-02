@@ -7,7 +7,6 @@ import OauthPopup from 'react-oauth-popup';
 import Modal from '@mui/material/Modal';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
 import LoginIcon from '@mui/icons-material/Login';
 
@@ -187,9 +186,7 @@ export default function MenuAppBar(props) {
                                 onClose={handleClose}
                             >
                                 <MenuItem onClick={handleGetInfo} style={style.userProfile.submenu.main} >
-                                    <Link href="/profile" underline="none" sx={{ color: 'black' }}>
-                                        <AccountCircleIcon sx={{ mr: 1 }} />โปรไฟล์
-                                    </Link>
+                                    <AccountCircleIcon sx={{ mr: 1 }} />โปรไฟล์
                                 </MenuItem>
                                 <MenuItem onClick={handleLogout} sx={style.userProfile.submenu.main}>
                                     <LogoutIcon sx={{ mr: 1 }} /> ออกจากระบบ

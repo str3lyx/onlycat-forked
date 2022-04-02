@@ -348,6 +348,9 @@ const style = {
             borderBottomLeftRadius: "12px",
             borderBottomRightRadius:"12px"
         }
+    },
+    profileAdv: {
+        
     }
 }
 
