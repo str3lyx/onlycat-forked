@@ -1,12 +1,12 @@
 import * as React from 'react'
-import ImagePost from './ImagePost'
+import ImagePost from '../components/ImagePost'
 import { Grid, Box } from '@mui/material'
 import config from '../config';
 import style from '../styleEngine.js'
 
 const axios = require('axios')
 
-function ImageBoard(props) {
+export default function Home(props) {
   const [data, setData] = React.useState([])
 
   React.useEffect(() => {
@@ -36,8 +36,6 @@ function ImageBoard(props) {
     </Box>
   )
 }
-
-export default ImageBoard
 
 function splitArray(arr)
 {

@@ -8,7 +8,7 @@ import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props
 import axios from 'axios';
 import config from '../config';
 import style from '../styleEngine.js'
-import UploadButton from './UploadButton';
+import UploadButton from './upload/UploadButton';
 
 export default function MenuAppBar(props) {
     const [auth, setAuth] = React.useState(sessionStorage.getItem('access_token') != null);
@@ -156,7 +156,12 @@ export default function MenuAppBar(props) {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleGetInfo} style={style.userProfile.submenu.main}>โปรไฟล์</MenuItem>
+                                <MenuItem style={style.userProfile.submenu.main}>
+                                    <Link href="/">แดชบอร์ด</Link>
+                                </MenuItem>
+                                <MenuItem onClick={handleGetInfo} style={style.userProfile.submenu.main}>
+                                    <Link href="/profile">โปรไฟล์</Link>
+                                </MenuItem>
                                 <MenuItem onClick={handleLogout} sx={style.userProfile.submenu.main}>ออกจากระบบ</MenuItem>
                             </Menu>
                         </>
