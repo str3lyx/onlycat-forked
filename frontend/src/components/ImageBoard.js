@@ -26,8 +26,8 @@ function ImageBoard(props) {
         data.length > 0 ? (
           <Grid container spacing="15px" sx={{px: "15px"}}>
             {
-              data.map((col) => {
-                return renderColumn(col, props.user)
+              data.map((col,index) => {
+                return renderColumn(col, index, props.user)
               })
             }
           </Grid>
@@ -49,13 +49,13 @@ function splitArray(arr)
   return cols
 }
 
-function renderColumn(col, user)
+function renderColumn(col, i, user)
 {
-  return <Grid item xs={3}>
+  return <Grid key={i} item xs={3}>
     <Grid container spacing="15px">
     {
-      col.map((data) => {
-        return <Grid item xs={12}>
+      col.map((data, index) => {
+        return <Grid key={index} item xs={12}>
           <ImagePost postId={data._id} user={user} />
         </Grid>
       })

@@ -38,30 +38,70 @@ const modal = {
     my: "20vh",
     width: "45vw",
     height: "60vh",
-    bgcolor: 'background.paper',
-    border: '',
-    borderRadius: '12px',
+    border: 'none',
     boxShadow: 24,
-    padding: 3,
-    boxSizing: 'border-box',
+    position: "relative",
+    upload: {
+        height: "87%",
+        backgroundColor: "#f3f3f3",
+        borderTopLeftRadius: "12px",
+        borderTopRightRadius: "12px",
+        px: "25px",
+        py: "10px",
+        boxSizing: 'border-box',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+    }
 }
 
 const uploader = {
-    active: {
+    main: {
         height: `calc(${modal.height}/2)`,
-        boxSizing: 'border-box',
-        position: 'relative',
-        cursor: 'pointer',
-        //backgroundSize: 'cover',
-        backgroundRepeat: 'no-repeat'
-    },
-    disactive: {
-        width: '100%',
-        height: `calc(${modal.height}/2)`,
-        border: '5px dashed red',
         boxSizing: 'border-box',
         borderRadius: '12px',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        marginBottom: '20px',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    description: {
+        display: 'flex',
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+        color: "#838383",
+        position: "absolute",
+        zIndex: 2,
+        backgroundColor: "rgba(255,255,255,0.8)"
+    },
+    image: {
+        position: 'absolute',
+        zIndex: 1,
+        height: '100%',
+    },
+    active: {
+        maxWidth: '100%',
+        "& img": {
+            height: '100%',
+            width: 'auto'
+        },
+        "& .upload-description": {
+            display: 'none'
+        },
+        "&:hover .upload-description": {
+            display: 'flex'
+        }
+    },
+    disactive: {
+        width: `calc(${modal.width} - 2*${modal.upload.px})`,
+        border: '5px dashed red',
+        display: 'block'
     }
 }
 
@@ -106,12 +146,16 @@ const style = {
     upload: {
         main: uploader,
         caption: {
-            main: {
-                width: "100%",
-            },
-            input: {
-                backgroundColor: '#ff0000'
-            }
+            width: "100%",
+            height: "25%",
+            border: '2px solid #0000ff',
+            overflowX: 'none',
+            overflowY: 'scroll',
+            resize: 'none',
+            fontSize: '2.4vmin',
+            borderRadius: "12px",
+            padding: "10px",
+            boxSizing: "border-box"
         },
         fileName: {
             position: 'absolute',
@@ -122,6 +166,59 @@ const style = {
             backgroundColor: 'rgba(0,0,0,0.7)',
             color: '#ffffff',
             padding: "3px"
+        },
+        setBtn: {
+            main: {
+                height: "13%",
+                padding: "0px",
+                width: "100%",
+                border: 'none',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#ffffff",
+                borderBottomLeftRadius: "12px",
+                borderBottomRightRadius: "12px",
+            },
+            btnPost: {
+                height: "100%",
+                borderTopLeftRadius: "0px",
+                borderTopRightRadius: "0px",
+                borderBottomLeftRadius: "0px",
+                borderBottomRightRadius: "12px",
+                width: "50%",
+                backgroundColor: "#0a5706",
+                color: "#ffffff",
+                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: '120%',
+                '&:hover': {
+                    color: "#0a5706",
+                    border: "2px solid #0a5706",
+                    backgroundColor: "#bbffb8"
+                }
+            },
+            btnCancel: {
+                height: "100%",
+                borderTopLeftRadius: "0px",
+                borderTopRightRadius: "0px",
+                borderBottomLeftRadius: "12px",
+                borderBottomRightRadius: "0px",
+                width: "50%",
+                backgroundColor: "#ffffff",
+                color: "#ff0000",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: '120%',
+                borderTop: "2px solid #ff0000",
+                '&:hover': {
+                    border: "2px solid #ff0000",
+                    backgroundColor: "#ffb8b8"
+                }
+            }
         }
     },
     dashBoard: {
