@@ -119,6 +119,54 @@ app.post('/api/react', [authenticated, bodyParser.json()], async (req, res) => {
     res.sendStatus(200)
 })
 
+app.post('/api/login/psu', async (req, res) => {
+    let auth_code = req.body.code
+    let auth_header = Buffer.from(`${config.PSUOauth.clientId}:${config.PSUOauth.clientSecret}`).toString('base64')
+    // logger.debug(auth_header)
+    let response = null
+    try {
+        // get access_token
+        response = await axios.post(config.PSUOauth.accessTokenURL,
+            {
+                grant_type: "authorization_code",
+                code: auth_code,
+                redirect_uri: config.PSUOauth.redirectURI,
+            }, { headers: { Authorization: `Basic ${auth_header}` } })
+        // logger.debug(JSON.stringify(response.data))
+        // get userInfo by using access_token
+        response = await axios.get(config.PSUOauth.userinfoEndpointURL, {
+            headers: { 'Authorization': 'Bearer ' + response.data.access_token }
+        })
+        // logger.debug(JSON.stringify(response.data))
+    } catch (error) {
+        logger.error("PSU Oauth catch: " + error.response.data.error)
+    }
+    // logger.debug(JSON.stringify(response.data))
+    let user = await models.User.findOne({ id: response.data.staff_id }).exec() // find by auth id
+    if (user != null) {
+        // return db id
+        let access_token = jwt.sign({ id: user._id }, TOKEN_SECRET, { expiresIn: '3h' })
+        res.send({ access_token })
+    } else {
+        models.User.create({
+            id: response.data.staff_id,
+            name: `${response.data.first_name} ${response.data.last_name}`,
+            email: response.data.email,
+            pictureUrl: "",
+            createdAt: new Date(),
+        }, function (err, result) {
+            if (err) {
+                logger.error(err);
+                res.status(500).send()
+            } else {
+                logger.info("Created user To database Name: " + result.name + " (id: " + result._id + " )");
+                let access_token = jwt.sign({ id: result._id }, TOKEN_SECRET, { expiresIn: '3h' })
+                res.send({ access_token })
+            }
+        })
+    }
+})
+
 app.post('/api/login', async (req, res) => {
     let token = req.body.token
     let result = await axios.get('https://graph.facebook.com/me', {

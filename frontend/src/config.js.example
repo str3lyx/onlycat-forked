@@ -3,7 +3,13 @@ const isProd = !(!process.env.NODE_ENV || process.env.NODE_ENV === 'development'
 const config = {
     isProd,
     apiUrlPrefix: isProd ? '/api' : 'http://localhost:5000/api',
-    FACEBOOK_APP_ID: "999999999999999"
+    FACEBOOK_APP_ID: "",
+    PSUOauth: {
+        clientId: "",
+        redirectURI: '',
+        authorizeURL: '',
+        state: ''
+    }
 }
-
+//crypto.createHash('md5').update(Date()).digest('hex')
 export default config;
