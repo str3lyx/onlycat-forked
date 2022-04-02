@@ -10,6 +10,7 @@ import axios from 'axios';
 import config from '../config';
 import style from '../styleEngine.js'
 import UploadButton from './upload/UploadButton';
+import ModalProfile from './profile/ModalProfile';
 
 export default function MenuAppBar(props) {
     const [auth, setAuth] = React.useState(sessionStorage.getItem('access_token') != null);
@@ -24,11 +25,6 @@ export default function MenuAppBar(props) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-    const handleGetInfo = async () => {
-        let result = await axios.get(`${config.apiUrlPrefix}/info`)
-        console.log("INFO: ", result.data)
-    }
 
     const handleSetInfo = () => {
         axios.get(`${config.apiUrlPrefix}/info`)
@@ -64,6 +60,7 @@ export default function MenuAppBar(props) {
                 alert('เกิดข้อผิดผลาด โปรดลองใหม่อีกครั้ง')
             })
     }
+
     React.useEffect(() => {
         if (auth) {
             handleSetInfo()
@@ -94,8 +91,19 @@ export default function MenuAppBar(props) {
         }
     }
 
+    // for profile button
+    const [modalOpen, setModalOpen] = React.useState(false);
+    const handleModalClose = (open) => {setModalOpen(open)}
+
+    const handleGetInfo = async () => {
+        let result = await axios.get(`${config.apiUrlPrefix}/info`)
+        console.log("INFO: ", result.data)
+        setModalOpen(true)
+    }
+
     return (
         <AppBar sx={style.topbar.main} >
+            <ModalProfile open={modalOpen} handleModalClose={handleModalClose} />
             <Toolbar
                 sx={style.topbar.toolbar}>
                 <Typography variant="h6" component="div">
@@ -168,12 +176,7 @@ export default function MenuAppBar(props) {
                                 open={Boolean(anchorEl)}
                                 onClose={handleClose}
                             >
-                                <MenuItem style={style.userProfile.submenu.main}>
-                                    <Link href="/">แดชบอร์ด</Link>
-                                </MenuItem>
-                                <MenuItem onClick={handleGetInfo} style={style.userProfile.submenu.main}>
-                                    <Link href="/profile">โปรไฟล์</Link>
-                                </MenuItem>
+                                <MenuItem onClick={handleGetInfo} style={style.userProfile.submenu.main}>โปรไฟล์</MenuItem>
                                 <MenuItem onClick={handleLogout} sx={style.userProfile.submenu.main}>ออกจากระบบ</MenuItem>
                             </Menu>
                         </>

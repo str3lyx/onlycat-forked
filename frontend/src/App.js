@@ -61,7 +61,6 @@ export default function App() {
       <Router>
         <Switch>
           <Route path='/' element={<Home user={user} searchData={searchData} />}/>
-          <Route path='/profile' element={<Profile />}/>
           <Route path='*' element={<NotFound />}/>
         </Switch>
       </Router>

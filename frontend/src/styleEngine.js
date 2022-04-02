@@ -296,6 +296,56 @@ const style = {
                 }
             }
         }
+    },
+    modalProfile: {
+        backgroundColor: "#ffffff",
+        mx: "auto",
+        my: "20vh",
+        width: "45vw",
+        height: "60vh",
+        border: 'none',
+        boxShadow: 24,
+        borderRadius: "12px"
+    },
+    profileHeader: {
+        backgroundColor: "#0000ff",
+        borderTopLeftRadius: "12px",
+        borderTopRightRadius: "12px",
+        width: "100%",
+        height: "40%"
+    },
+    profileBody: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "60%"
+    },
+    profileSidebar: {
+        active: {
+            display: "inline-block",
+            width: "20%",
+            height: "100%",
+            backgroundColor: "#a3a3a3",
+            borderBottomLeftRadius: "12px"
+        },
+        disactive: {
+            display: "none"
+        }
+    },
+    profileInfo: {
+        active: {
+            width: "80%",
+            height: "100%",
+            backgroundColor: "#ffffff",
+            borderBottomRightRadius:"12px"
+        },
+        disactive: {
+            width: "100%",
+            height: "100%",
+            borderBottomLeftRadius: "12px",
+            borderBottomRightRadius:"12px"
+        }
     }
 }
 
