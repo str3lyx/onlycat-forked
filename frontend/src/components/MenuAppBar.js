@@ -22,6 +22,7 @@ export default function MenuAppBar(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [userImagePath, setuserImagePath] = React.useState("");
     const [userName, setuserName] = React.useState("");
+    const [userData, setUserData] = React.useState({name:'',pictureUrl:'',_id:'',reaction:{like:[],disLike:[]}, createdAt: '', email: ''});
 
     const [openAuthModal, setOpenAuthModal] = React.useState(false);
     const handleOpenAuthModal = () => setOpenAuthModal(true);
@@ -107,12 +108,13 @@ export default function MenuAppBar(props) {
     const handleGetInfo = async () => {
         let result = await axios.get(`${config.apiUrlPrefix}/info`)
         console.log("INFO: ", result.data)
+        setUserData(result.data)
         setModalOpen(true)
     }
 
     return (
         <AppBar sx={style.topbar.main} >
-            <ModalProfile open={modalOpen} handleModalClose={handleModalClose} />
+            <ModalProfile guest={false} user={userData} open={modalOpen} logout={handleLogout} handleModalClose={handleModalClose} />
             <Toolbar
                 sx={style.topbar.toolbar}>
                 <Typography variant="h6" component="div">

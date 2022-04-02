@@ -307,14 +307,68 @@ const style = {
         height: "60vh",
         border: 'none',
         boxShadow: 24,
-        borderRadius: "12px"
+        borderRadius: "12px",
+        position: "relative"
+    },
+    btnClose: {
+        cursor: "pointer",
+        position:"absolute",
+        right:"-2vmin", top:"-2vmin",
+        backgroundColor: "#ff0000", color: "#ffffff",
+        padding: "0.4vmin",
+        boxSizing: "border-box",
+        width: "4vmin", height: "4vmin",
+        borderRadius: "2vmin"
     },
     profileHeader: {
-        backgroundColor: "#0000ff",
+        backgroundColor: "#040059",
         borderTopLeftRadius: "12px",
-        borderTopRightRadius: "12px",
+        borderTopRightRadius: "0px",
         width: "100%",
-        height: "40%"
+        height: "40%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        px: "2vw",
+        py: "2vh",
+        boxSizing: "border-box",
+        pic: {
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            width: "60%",
+            avatar: {
+                width: "18vmin",
+                height: "18vmin",
+                marginRight: "5%"
+            },
+            text: {
+                width: "calc(100% - 18vmin)",
+                name: {
+                    color: "#ffffff",
+                    fontWeight: "bold",
+                    fontSize: "4vmin",
+                    padding: 0,
+                    margin: 0
+                },
+                id: {
+                    padding: 0,
+                    margin: 0,
+                    fontSize: "2vmin",
+                    color: "#d2d2d2",
+                }
+            }
+        },
+        stat: {
+            width: "40%",
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            react: {
+                textAlign: "center",
+                color: "#ffffff"
+            }
+        }
     },
     profileBody: {
         display: "flex",
@@ -329,7 +383,45 @@ const style = {
             width: "20%",
             height: "100%",
             backgroundColor: "#a3a3a3",
-            borderBottomLeftRadius: "12px"
+            borderBottomLeftRadius: "12px",
+            position: "relative",
+            menu: {
+                backgroundColor: "#000000",
+                textAlign: "center",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderBottom: "1px solid #000000",
+                height: "18%",
+                borderBottomLeftRadius: "0px",
+                borderTopLeftRadius: "0px",
+                borderTopRightRadius: "0px",
+                borderBottomRightRadius: "0px",
+                width: "100%",
+                color: "#ffffff",
+                fontSize: '2.1vmin'
+            },
+            lastMenu: {
+                position: "absolute",
+                bottom: "0",
+                backgroundColor: "#a00000",
+                borderTop: "1px solid #000000",
+                color: "#ffffff",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "18%",
+                cursor: "pointer",
+                width: "100%",
+                borderBottomLeftRadius: "12px",
+                borderTopLeftRadius: "0px",
+                borderTopRightRadius: "0px",
+                borderBottomRightRadius: "0px",
+                fontSize: '2.1vmin',
+                '&:hover': {
+                    backgroundColor: "#ff4d4d"
+                },
+            }
         },
         disactive: {
             display: "none"
@@ -340,17 +432,29 @@ const style = {
             width: "80%",
             height: "100%",
             backgroundColor: "#ffffff",
-            borderBottomRightRadius:"12px"
+            borderBottomRightRadius:"12px",
+            padding: "2vmin",
+            boxSizing: "border-box"
         },
         disactive: {
             width: "100%",
             height: "100%",
             borderBottomLeftRadius: "12px",
-            borderBottomRightRadius:"12px"
+            borderBottomRightRadius:"12px",
+            padding: "2vmin",
+            boxSizing: "border-box"
+        },
+        info: {
+            height: "30%",
+            borderBottom: "2px solid #000000",
+            verticalAlign: "bottom",
+            marginBottom: "2.5vh",
+            boxSizing: "border-box",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            alignItems: "flex-start"
         }
-    },
-    profileAdv: {
-        
     }
 }
 
