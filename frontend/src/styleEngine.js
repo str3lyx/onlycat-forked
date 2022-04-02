@@ -4,6 +4,7 @@ const topbar = {
         display: 'flex',
         height: '64px',
         width: '100%',
+        minWidth: '800px',
         alignItems: 'center',
         justifyContent: 'center',
         margin: 0,
@@ -21,7 +22,8 @@ const topbar = {
 const mainLogo = {
     textDecoration: 'none',
     fontWeight: 'bold',
-    fontSize: 30
+    fontSize: "4.5vmin",
+    cursor: "pointer"
 }
 
 const searchBar = {
@@ -224,13 +226,14 @@ const style = {
         }
     },
     dashBoard: {
-        backgroundColor: "#000000",
+        backgroundColor: "#e4e4e4",
         width: '90%',
+        minWidth: '720px',
         minHeight: `calc(100vh - ${topbar.main.height})`,
         boxSizing: 'border-box',
         marginTop: topbar.main.height,
-        mx: '5%',
-        py: '10px'
+        mx: 'max(5%,90px)',
+        py: '15px'
     },
     post: {
         cardBorder: { borderRadius: '12px', backgroundColor: '#3d3d3d' },
@@ -455,6 +458,18 @@ const style = {
             justifyContent: "flex-end",
             alignItems: "flex-start"
         }
+    },
+    zeroPost: {
+        width:"100%",
+        minWidth: '720px',
+        height: `calc(100vh - ${topbar.main.height} - 30px)`,
+        color: '#4e4e4e',
+        boxSizing: "border-box",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        fontSize: "3vmin"
     }
 }
 

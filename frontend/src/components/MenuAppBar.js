@@ -23,6 +23,7 @@ export default function MenuAppBar(props) {
     const [userImagePath, setuserImagePath] = React.useState("");
     const [userName, setuserName] = React.useState("");
     const [userData, setUserData] = React.useState({name:'',pictureUrl:'',_id:'',reaction:{like:[],disLike:[]}, createdAt: '', email: ''});
+    const [searchKeyWord, setSearchKeyword] = React.useState('')
 
     const [openAuthModal, setOpenAuthModal] = React.useState(false);
     const handleOpenAuthModal = () => setOpenAuthModal(true);
@@ -57,6 +58,7 @@ export default function MenuAppBar(props) {
 
     const handleSearchData = (e) => {
         // console.log("key: ", e.key)
+        setSearchKeyword(e.target.value)
         if (e.key === "Enter") { // Enter pressed
             props.setSearchData(e.target.value)
         }
@@ -115,13 +117,8 @@ export default function MenuAppBar(props) {
     return (
         <AppBar sx={style.topbar.main} >
             <ModalProfile guest={false} user={userData} open={modalOpen} logout={handleLogout} handleModalClose={handleModalClose} />
-            <Toolbar
-                sx={style.topbar.toolbar}>
-                <Typography variant="h6" component="div">
-                    <Link href="/" color="inherit" sx={style.mainLogo}>
-                        ONLY CAT
-                    </Link>
-                </Typography>
+            <Toolbar sx={style.topbar.toolbar}>
+                <Box onClick={() => {window.location = "/"}} color="inherit" sx={style.mainLogo}>ONLY CAT</Box>
                 <TextField
                     sx={style.searchBar.main}
                     variant="outlined"
@@ -131,7 +128,7 @@ export default function MenuAppBar(props) {
                     onKeyUp={handleSearchData}
                     InputProps={{
                         endAdornment: (
-                            <InputAdornment position="end">
+                            <InputAdornment onClick={() => {props.setSearchData(searchKeyWord)}} sx={{cursor: "pointer"}} position="end">
                                 <SearchIcon />
                             </InputAdornment>
                         ),

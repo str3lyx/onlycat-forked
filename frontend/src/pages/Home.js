@@ -1,19 +1,30 @@
 import * as React from 'react'
 import ImagePost from '../components/ImagePost'
-import { Grid, Box } from '@mui/material'
+import { Grid, Box, Button } from '@mui/material'
 import config from '../config';
 import style from '../styleEngine.js'
+import UploadIcon from '@mui/icons-material/Upload';
 
 const axios = require('axios')
 
 export default function Home(props) {
   const [data, setData] = React.useState([])
+  const [cache, setCache] = React.useState([])
+
+  React.useEffect(() => {
+    axios.get(`${config.apiUrlPrefix}/data/post?search=`)
+    .then((res) => {
+      setCache(res.data)
+      // console.log("board ", res.data)
+    })
+  }, [])
 
   React.useEffect(() => {
     axios.get(`${config.apiUrlPrefix}/data/post?search=${props.searchData}`)
       .then((res) => {
         setData(splitArray(res.data))
         // console.log("board ", res.data)
+        console.log(res.data.length)
       })
   }, [props.searchData])
 
@@ -23,7 +34,14 @@ export default function Home(props) {
       sx={style.dashBoard}
     >
       {
-        data.length > 0 ? (
+        cache.length > 0 ? 
+          isEmpty(data) ? (
+            <Box sx={style.zeroPost}>
+              <Box sx={{fontSize: "5vmax", mb: "2vh"}}>(╯°□°）╯︵ ┻━┻</Box>
+              <Box>เราไม่พบโพสต์ที่ตรงตามการค้นหาของคุณ</Box>
+              <Box>ลองตรวจการสะกดของคุณดู เผื่อคุณอาจจะพิมพ์ผิดก็ได้ (¯―¯٥)</Box>
+            </Box>
+          ) :
           <Grid container spacing="15px" sx={{px: "15px"}}>
             {
               data.map((col,index) => {
@@ -31,7 +49,24 @@ export default function Home(props) {
               })
             }
           </Grid>
-        ) : <Box sx={{color: '#ffffff'}}>ดูเหมือนว่าจะยังไม่มีคนโพสต์อะไรลงเลยนะ</Box>
+         :
+        <Box sx={style.zeroPost}>
+          <Box sx={{fontSize: "5vmax", mb: "2vh"}}>¯\_(ツ)_/¯</Box>
+          <Box>ดูเหมือนว่าจะยังไม่มีคนโพสต์อะไรลงเลยนะ!!! รอสักครู่</Box>
+          {props.user && <Box sx={{display:"flex", alignItems: "center"}}>
+            หรือจะเป็นคนแรกที่โพสต์ สร้างโพสต์ได้ที่
+            <Button
+              variant="contained" startIcon={<UploadIcon />}
+              size="medium"
+              aria-label="upload cat image here"
+              aria-haspopup="false"
+              sx={style.btnUpload}
+              disabled
+            >
+              โพสต์ใหม่
+            </Button>
+          </Box>}
+        </Box>
       }
     </Box>
   )
@@ -60,4 +95,13 @@ function renderColumn(col, i, user)
     }
     </Grid>
   </Grid>
+}
+
+function isEmpty(cols)
+{
+  for(var col of cols)
+  {
+    if(col.length > 0) return false
+  }
+  return true
 }
