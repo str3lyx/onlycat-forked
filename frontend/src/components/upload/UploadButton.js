@@ -4,8 +4,8 @@ import UploadIcon from '@mui/icons-material/Upload';
 import Tooltip from '@mui/material/Tooltip'
 import Button from '@mui/material/Button';
 
-import style from '../styleEngine'
-import ModalUpload from './upload/ModalUpload';
+import style from '../../styleEngine'
+import ModalUpload from './ModalUpload';
 
 export default function UploadButton(props) {
 

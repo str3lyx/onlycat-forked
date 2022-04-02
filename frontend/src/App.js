@@ -1,8 +1,11 @@
 import * as React from 'react'
 import axios from 'axios';
-import MenuAppBar from './components/MenuAppBar'
-import ImageBoard from './components/ImageBoard';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { BrowserRouter as Router, Routes as Switch, Route, Navigate } from "react-router-dom";
+import Home from './pages/Home.js'
+import Profile from './pages/Profile'
+import NotFound from './pages/NotFound'
+import MenuAppBar from './components/MenuAppBar'
 
 const theme = createTheme({
   palette: {
@@ -37,7 +40,7 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(err)
 })
 
-function App() {
+export default function App() {
 
   const [user, setUserData] = React.useState(null)
   const [searchData, setSearchData] = React.useState("")
@@ -55,9 +58,13 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <MenuAppBar userData={userData} setSearchData={setSearchDataCallback} />
-      <ImageBoard user={user} searchData={searchData} />
+      <Router>
+        <Switch>
+          <Route path='/' element={<Home user={user} searchData={searchData} />}/>
+          <Route path='/profile' element={<Profile />}/>
+          <Route path='*' element={<NotFound />}/>
+        </Switch>
+      </Router>
     </ThemeProvider>
   );
 }
-
-export default App;

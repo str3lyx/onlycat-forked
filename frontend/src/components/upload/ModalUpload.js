@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {Modal, Box, Button, Typography} from '@mui/material';
-import CancelIcon from '@mui/icons-material/Cancel';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import axios from 'axios';
