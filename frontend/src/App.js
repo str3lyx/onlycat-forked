@@ -12,6 +12,9 @@ const theme = createTheme({
     white: {
       main: '#FFFFFF',
     },
+    red: {
+      main: '#CA0000',
+    },
     primary: {
       light: '#757ce8',
       main: '#3f50b5',
@@ -60,9 +63,9 @@ export default function App() {
       <MenuAppBar userData={userData} setSearchData={setSearchDataCallback} />
       <Router>
         <Switch>
-          <Route path='/' element={<Home user={user} searchData={searchData} />}/>
-          <Route path='/profile' element={<Profile />}/>
-          <Route path='*' element={<NotFound />}/>
+          <Route path='/' element={<Home user={user} searchData={searchData} />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='*' element={<NotFound />} />
         </Switch>
       </Router>
     </ThemeProvider>

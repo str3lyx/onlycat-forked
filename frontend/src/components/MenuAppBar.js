@@ -4,6 +4,7 @@ import FacebookRoundedIcon from '@mui/icons-material/FacebookRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import OauthPopup from 'react-oauth-popup';
+import Modal from '@mui/material/Modal';
 
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
@@ -16,6 +17,10 @@ export default function MenuAppBar(props) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [userImagePath, setuserImagePath] = React.useState("");
     const [userName, setuserName] = React.useState("");
+
+    const [openAuthModal, setOpenAuthModal] = React.useState(false);
+    const handleOpenAuthModal = () => setOpenAuthModal(true);
+    const handleCloseAuthModal = () => setOpenAuthModal(false);
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -179,27 +184,64 @@ export default function MenuAppBar(props) {
                         </>
                     ) :
                         <>
-                            <FacebookLogin
-                                appId={config.FACEBOOK_APP_ID}
-                                callback={responseFacebook}
-                                render={renderProps => (<Button variant="outlined" color="white" onClick={renderProps.onClick}>
-                                    <FacebookRoundedIcon sx={style.btnFbLogin} /> เข้าสู่ระบบด้วย Facebook
-                                </Button>
-                                )}
-                            />
-                            <Button variant="outlined" color="white" >
-                                <OauthPopup
-                                    url={`${config.PSUOauth.authorizeURL}?client_id=${config.PSUOauth.clientId}&redirect_uri=${config.PSUOauth.redirectURI}&response_type=code&state=${config.PSUOauth.state}`}
-                                    onCode={onSuccessPSUOauth}
-                                    onClose={onClosePSUOauth}
-                                >
-                                    login psu passport
-                                </OauthPopup>
-                            </Button>
+                            <Button variant="outlined" color="white" onClick={handleOpenAuthModal}>เข้าสู่ระบบ</Button>
+                            <Modal
+                                open={openAuthModal}
+                                onClose={handleCloseAuthModal}
+                                aria-labelledby="modal-modal-title"
+                                aria-describedby="modal-modal-description"
+                            >
+                                <Box sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: 400,
+                                    height: 200,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    textAlign: 'center',
+                                    bgcolor: 'background.paper',
+                                    border: '2px solid #FFFFFF',
+                                    borderRadius: "0.5rem",
+                                    boxShadow: 24,
+                                    p: 5,
+                                    pb: 6
+                                }}>
+                                    <Typography variant="h4" sx={{ fontWeight: "bold" }}>ONLY CAT</Typography>
+                                    <Typography variant="h6"> เข้าสู่ระบบ </Typography>
+                                    <Box sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        gap: 3,
+                                        mt: 3
+                                    }}>
+                                        <FacebookLogin
+                                            appId={config.FACEBOOK_APP_ID}
+                                            callback={responseFacebook}
+                                            render={renderProps => (<Button variant="outlined" onClick={renderProps.onClick}>
+                                                <FacebookRoundedIcon sx={style.btnFbLogin} /> เข้าสู่ระบบด้วย Facebook
+                                            </Button>
+                                            )}
+                                        />
+                                        <Button variant="outlined" color="red" >
+                                            <OauthPopup
+                                                url={`${config.PSUOauth.authorizeURL}?client_id=${config.PSUOauth.clientId}&redirect_uri=${config.PSUOauth.redirectURI}&response_type=code&state=${config.PSUOauth.state}`}
+                                                onCode={onSuccessPSUOauth}
+                                                onClose={onClosePSUOauth}
+                                            >
+                                                เข้าสู่ระบบด้วย PSU passport
+                                            </OauthPopup>
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </Modal>
                         </>
                     }
                 </Box>
             </Toolbar>
-        </AppBar>
+        </AppBar >
     );
 }

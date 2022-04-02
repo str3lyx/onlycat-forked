@@ -222,7 +222,7 @@ const style = {
         }
     },
     dashBoard: {
-        backgroundColor:"#000000",
+        backgroundColor: "#000000",
         width: '90%',
         minHeight: `calc(100vh - ${topbar.main.height})`,
         boxSizing: 'border-box',
@@ -240,7 +240,7 @@ const style = {
                 justifyContent: 'flex-start',
                 alignItems: 'flex-end'
             },
-            picture: {width: '50px', height: '50px', marginRight: '7px'},
+            picture: { width: '50px', height: '50px', marginRight: '7px' },
             author: { color: '#ffffff', fontWeight: 600 },
             date: { color: '#cecece', fontSize: 10 }
         },
