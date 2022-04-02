@@ -4,8 +4,17 @@ module.exports = {
     DB: {
         host: isProd ? 'mongodb' : 'localhost',
         port: 27017,
-        name: 'onlycat'
+        name: 'onlycatdb'
     },
     imgUrlPrefix: isProd ? '/img' : 'http://localhost:5000/img',
-    TOKEN_SECRET: "this-is-my-secret-for-development"
+    TOKEN_SECRET: "this-is-my-secret-for-development",
+    PSUOauth: {
+        clientId: "",
+        clientSecret: "",
+        redirectURI: '',
+        authorizeURL: '',
+        accessTokenURL: '',
+        userinfoEndpointURL: '',
+        state: ''
+    }
 };
