@@ -5,6 +5,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import ShuffleIcon from '@mui/icons-material/Shuffle';
 import OauthPopup from 'react-oauth-popup';
 import Modal from '@mui/material/Modal';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import axios from 'axios';
@@ -174,12 +177,18 @@ export default function MenuAppBar(props) {
                                 onClose={handleClose}
                             >
                                 <MenuItem style={style.userProfile.submenu.main}>
-                                    <Link href="/">แดชบอร์ด</Link>
+                                    <Link href="/" underline="none" sx={{ color: 'black' }}>
+                                        <DashboardIcon sx={{ mr: 1 }} />แดชบอร์ด
+                                    </Link>
                                 </MenuItem>
-                                <MenuItem onClick={handleGetInfo} style={style.userProfile.submenu.main}>
-                                    <Link href="/profile">โปรไฟล์</Link>
+                                <MenuItem onClick={handleGetInfo} style={style.userProfile.submenu.main} >
+                                    <Link href="/profile" underline="none" sx={{ color: 'black' }}>
+                                        <AccountCircleIcon sx={{ mr: 1 }} />โปรไฟล์
+                                    </Link>
                                 </MenuItem>
-                                <MenuItem onClick={handleLogout} sx={style.userProfile.submenu.main}>ออกจากระบบ</MenuItem>
+                                <MenuItem onClick={handleLogout} sx={style.userProfile.submenu.main}>
+                                    <LogoutIcon sx={{ mr: 1 }} /> ออกจากระบบ
+                                </MenuItem>
                             </Menu>
                         </>
                     ) :
