@@ -34,4 +34,6 @@
 
 ---
 ## [onlycat.eastasia.cloudapp.azure.com](https://onlycat.eastasia.cloudapp.azure.com)
+### ไฟล์รายงาน [report_file_pdf](https://github.com/karnzx/only-cat/blob/main/report%20only-cat.pdf)
 ![home_image](https://github.com/karnzx/only-cat/blob/main/backend/public/home_pic.png)
+
