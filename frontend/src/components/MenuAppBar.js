@@ -57,7 +57,6 @@ export default function MenuAppBar(props) {
     }
 
     const handleSearchData = (e) => {
-        // console.log("key: ", e.key)
         setSearchKeyword(e.target.value)
         if (e.key === "Enter") { // Enter pressed
             props.setSearchData(e.target.value)
@@ -80,7 +79,6 @@ export default function MenuAppBar(props) {
     }, [auth])
 
     const onSuccessPSUOauth = async (code, params) => {
-        // console.log(">>>>> a code", code, params);
         let result = await axios.post(`${config.apiUrlPrefix}/login/psu`, { code })
         sessionStorage.setItem('access_token', result.data.access_token)
         setAuth(true)
@@ -92,11 +90,9 @@ export default function MenuAppBar(props) {
 
     const responseFacebook = async (response) => {
         if (response.accessToken) {
-            // console.log('login with accessToken= ' + response.accessToken)
             let result = await axios.post(`${config.apiUrlPrefix}/login`, {
                 token: response.accessToken
             })
-            // console.log(result.data)
             sessionStorage.setItem('access_token', result.data.access_token)
             setAuth(true)
             window.location.reload()
@@ -109,7 +105,6 @@ export default function MenuAppBar(props) {
 
     const handleGetInfo = async () => {
         let result = await axios.get(`${config.apiUrlPrefix}/info`)
-        console.log("INFO: ", result.data)
         setUserData(result.data)
         setModalOpen(true)
     }

@@ -20,7 +20,6 @@ export default function ModalProfile(props){
         tempOpen.current = props.open
         setUser(props.user)
         tempUser.current = props.user
-        console.log(props.user)
     }, [props.open, props.user])
 
     return (

@@ -15,7 +15,6 @@ export default function Home(props) {
     axios.get(`${config.apiUrlPrefix}/data/post?search=`)
     .then((res) => {
       setCache(res.data)
-      // console.log("board ", res.data)
     })
   }, [])
 
@@ -23,8 +22,6 @@ export default function Home(props) {
     axios.get(`${config.apiUrlPrefix}/data/post?search=${props.searchData}`)
       .then((res) => {
         setData(splitArray(res.data))
-        // console.log("board ", res.data)
-        console.log(res.data.length)
       })
   }, [props.searchData])
 

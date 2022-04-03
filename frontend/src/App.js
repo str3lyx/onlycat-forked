@@ -49,12 +49,10 @@ export default function App() {
 
   const userData = (data) => {
     setUserData(data)
-    // console.log(data)
   }
 
   const setSearchDataCallback = (data) => {
     setSearchData(data)
-    // console.log(data)
   }
 
   return (

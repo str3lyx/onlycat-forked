@@ -38,7 +38,6 @@ export default function ModalUpload(props) {
     formData.append("file", selectedFile);
     formData.append("caption", caption);
     // for (var key of formData.entries()) {
-    //   console.log(key[0] + ', ' + key[1]);
     // }
     axios
       .post(`${config.apiUrlPrefix}/upload/image`, formData)
