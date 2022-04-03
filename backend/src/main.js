@@ -242,6 +242,11 @@ app.get('/api/info', authenticated, async (req, res) => {
     res.send(user)
 })
 
+// health check
+app.get('/api/ping', (req, res) => {
+    res.send('pong')
+})
+
 app.listen(port, () => {
     logger.info(`Example app listening on port ${port}`)
 })
