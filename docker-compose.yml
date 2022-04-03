@@ -32,10 +32,31 @@ services:
       - 80:80
       - 443:443
     volumes:
-      # - ../deployment/html:/usr/share/nginx/html
-      - ../deployment/cert-conf:/etc/nginx/ssl
+      - web-root:/usr/share/nginx/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
     networks:
       - onlycat
+
+  certbot:
+    image: certbot/certbot
+    container_name: onlycat-certbot
+    volumes:
+      - web-root:/usr/share/nginx/html
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+    depends_on:
+      - frontend
+
+volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/azureuser/only-cat-dcw/deployment/html/
+      o: bind
 
 networks:
   onlycat:
