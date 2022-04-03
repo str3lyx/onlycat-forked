@@ -6,6 +6,7 @@
 ใช้ Node.js ทำ Web API มี REST API อย่างน้อย 2 resources  
 - [x] Social Authentication  
     - [x] Facebook 
+    - [x] PSU passport (https://oauth2.eng.psu.ac.th/)
 - [x] ใช้ไลบรารี express ในการทำ Web API 
 - [x] ใช้ไลบรารี winston ในการ log
 - [x] มีการบันทึกข้อมูลลงฐานข้อมูล
@@ -30,3 +31,7 @@
 ### by
 - 6210110242 [Piravit Chenpittaya](https://github.com/karnzx)
 - 6210110383 [Suttirak Mattayawerakiat](https://github.com/suttirak-mattaya)
+
+---
+## onlycat.eastasia.cloudapp.azure.com
+![home_image](https://github.com/karnzx/only-cat/blob/main/backend/public/home_pic.png)
