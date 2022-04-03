@@ -23,7 +23,7 @@
 - [x] ใช้ nginx เป็น reverse proxy
 - [x] ใช้ docker ในการ deploy (และใช้สำหรับ develop)
 - [x] ใช้ pm2 ในการ deploy node.js application
-- [ ] ใช้ let’s encrypt ในการออก certificate สำหรับ https
+- [x] ใช้ let’s encrypt ในการออก certificate สำหรับ https
 
 ---
 
