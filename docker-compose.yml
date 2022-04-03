@@ -47,6 +47,10 @@ services:
       - certbot-var:/var/lib/letsencrypt
     depends_on:
       - frontend
+    # usage 
+    # test: docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d example.org
+    # build: docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d example.org
+    # renew: docker compose run --rm certbot renew
 
 volumes:
   certbot-etc:
