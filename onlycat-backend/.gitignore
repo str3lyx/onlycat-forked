@@ -1,0 +1,23 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# ENV
+mise.local.toml
+.env
+
+# IDE
+.vscode
+.zed
+.idea
+
+# Migrations
+**/migrations/*
+!**/migrations/__init__.py

@@ -1,0 +1,51 @@
+from django.contrib.auth.models import UserManager, AbstractUser
+from django.contrib.auth.validators import ASCIIUsernameValidator
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from uuid import uuid4
+from frameworks.base.models import AbstractModel, AbstractModelQuerySet
+
+
+class OnlyCatUserManager(UserManager):
+    def get_queryset(self):
+        return AbstractModelQuerySet(self.model, using=self._db)
+    
+    def actives(self):
+        return self.get_queryset().actives()
+    
+    def inactives(self):
+        return self.get_queryset().inactives()
+    
+
+class OnlyCatUser(AbstractModel, AbstractUser):
+    username = models.CharField(
+        max_length=32,
+        unique=True,
+        validators=[ASCIIUsernameValidator()],
+        error_messages={
+            "unique": _("A user with that username already exists."),
+        },
+    )
+    email = models.EmailField()
+    date_joined = None
+    objects: OnlyCatUserManager = OnlyCatUserManager()
+
+    @property
+    def fullname(self):
+        return self.get_full_name()
+    
+    def delete(self, *args, **kwargs):
+        self.is_active = False
+        self.username = self.id.hex
+        self.save()
+
+
+class UserUpdateLog(AbstractModel):
+    class Actions(models.TextChoices):
+        CREATED = 'created', 'Created'
+        UPDATED = 'updated', 'Updated'
+        DELETED = 'deleted', 'Deleted'
+
+    user = models.ForeignKey(OnlyCatUser, on_delete=models.CASCADE, related_name='logs')
+    action = models.CharField(max_length=8, choices=Actions)
+    detail = models.JSONField(null=True)
