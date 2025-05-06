@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from uuid import uuid4
 from frameworks.base.models import AbstractModel, AbstractModelQuerySet
+from frameworks.base.decorators import post_create
 
 
 class OnlyCatUserManager(UserManager):
@@ -33,9 +34,9 @@ class OnlyCatUser(AbstractModel, AbstractUser):
     @property
     def fullname(self):
         return self.get_full_name()
-    
+
     def delete(self, *args, **kwargs):
-        self.is_active = False
+        super().delete(*args, **kwargs)
         self.username = self.id.hex
         self.save()
 

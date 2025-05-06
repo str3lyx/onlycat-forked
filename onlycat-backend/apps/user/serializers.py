@@ -45,7 +45,7 @@ class UserRegistrationSerializer(OnlyCatUserSerializer):
 
 
 class SignInSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    username = serializers.CharField(max_length=16)
     password = serializers.CharField(style={'input_type': 'password'})
 
     class Meta:

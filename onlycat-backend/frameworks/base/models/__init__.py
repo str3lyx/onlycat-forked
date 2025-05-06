@@ -23,6 +23,10 @@ class AbstractModel(models.Model):
     def base_attrs():
         return ['id', 'is_active', 'created', 'created_by']
 
+    def delete(self, *args, **kwargs):
+        self.is_active = False
+        self.save()
+
     class Meta:
         abstract = True
         ordering = ['-created']
