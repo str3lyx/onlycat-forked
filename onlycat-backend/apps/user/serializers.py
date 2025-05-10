@@ -1,5 +1,6 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.validators import ASCIIUsernameValidator
+from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from . import models, validators
@@ -32,8 +33,7 @@ class OnlyCatUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.OnlyCatUser
         fields = '__all__'
-        read_only_fields = ['last_login', 'is_superuser', 'is_staff', 'created',
-                            'created_by', 'groups', 'user_permissions']
+        read_only_fields = models.OnlyCatUser.base_attrs()
 
 
 class UserRegistrationSerializer(OnlyCatUserSerializer):
@@ -59,7 +59,7 @@ class PasswordChangeSerializer(serializers.ModelSerializer):
     def validate_current_password(self, current_password):
         self.instance: models.OnlyCatUser
         if not self.instance.check_password(current_password):
-            raise serializers.ValidationError('Mismatch password')
+            raise serializers.ValidationError(_('Mismatch password'))
         return current_password
 
     def update(self, instance, validated_data):
@@ -68,4 +68,4 @@ class PasswordChangeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.OnlyCatUser
-        fields = ['password']
+        fields = ['current_password', 'password']

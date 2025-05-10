@@ -2,9 +2,7 @@ from django.contrib.auth.models import UserManager, AbstractUser
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from uuid import uuid4
 from frameworks.base.models import AbstractModel, AbstractModelQuerySet
-from frameworks.base.decorators import post_create
 
 
 class OnlyCatUserManager(UserManager):
@@ -39,6 +37,12 @@ class OnlyCatUser(AbstractModel, AbstractUser):
         super().delete(*args, **kwargs)
         self.username = self.id.hex
         self.save()
+    
+    @staticmethod
+    def base_attrs():
+        return ['id', 'is_active', 'created', 'created_by',
+                'last_login', 'is_superuser', 'is_staff',
+                'groups', 'user_permissions']
 
 
 class UserUpdateLog(AbstractModel):
