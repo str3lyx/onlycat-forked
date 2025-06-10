@@ -4,7 +4,9 @@ import {
   Container,
   Divider,
   Grid,
+  Link,
   Paper,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material'
@@ -74,6 +76,14 @@ export default function RegisterPage() {
               <Button fullWidth type='submit' variant='contained' size='large'>
                 Register
               </Button>
+            </Grid>
+
+            <Grid size={12} component={Divider} children='or' />
+            <Grid size={12}>
+              <Stack direction='row' alignItems='center' justifyContent='center'>
+                <Typography component='span'>Already has account?</Typography>
+                <Link ml={1} href='/sign-in'>Sign in</Link>
+              </Stack>
             </Grid>
           </Grid>
         </form>
