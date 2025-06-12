@@ -1,0 +1,46 @@
+name: onlycat
+
+services:
+  onlycat-db:
+    container_name: "onlycat-db"
+    image: "docker.io/postgres:17-alpine"
+    restart: always
+    shm_size: 128mb
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - onlycat-data:/var/lib/postgresql/data
+
+  onlycat-frontend:
+    container_name: "onlycat-frontend"
+    build: './onlycat-frontend'
+    restart: on-failure
+    ports:
+      - 3000:3000
+    volumes:
+      - ./onlycat-frontend:/onlycat-frontend:Z
+
+  onlycat-backend:
+    container_name: "onlycat-backend"
+    build: './onlycat-backend'
+    restart: on-failure
+    ports:
+      - 8000:8000
+    depends_on:
+      - onlycat-db
+    volumes:
+      - ./onlycat-backend:/onlycat-backend:Z
+    environment:
+      SECRET: ${SECRET}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: onlycat-db
+      DB_PORT: "5432"
+
+volumes:
+  onlycat-data:

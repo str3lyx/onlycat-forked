@@ -1,0 +1,19 @@
+.next
+node_modules
+
+# venv
+.venv
+
+# env
+.env
+.env.*
+
+# mise
+mise.toml
+mise.*.toml
+.tool-versions
+
+# IDE
+.vscode
+.zed
+.idea

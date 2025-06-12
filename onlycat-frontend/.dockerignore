@@ -1,0 +1,22 @@
+__pycache__/
+
+# Migrations
+**/migrations/*
+!**/migrations/__init__.py
+
+# venv
+.venv
+
+# env
+.env
+.env.*
+
+# mise
+mise.toml
+mise.*.toml
+.tool-versions
+
+# IDE
+.vscode
+.zed
+.idea
