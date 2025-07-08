@@ -2,21 +2,16 @@ from django.contrib.auth.models import UserManager, AbstractUser
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from frameworks.base.models import AbstractModel, AbstractModelQuerySet
+from frameworks.base.models import AbstractModel, AbstractModelManager
 
 
-class OnlyCatUserManager(UserManager):
-    def get_queryset(self):
-        return AbstractModelQuerySet(self.model, using=self._db)
-    
-    def actives(self):
-        return self.get_queryset().actives()
-    
-    def inactives(self):
-        return self.get_queryset().inactives()
-    
+class OnlyCatUserManager(AbstractModelManager, UserManager):
+    pass
+
 
 class OnlyCatUser(AbstractModel, AbstractUser):
+    '''User of onlycat_backend'''
+
     username = models.CharField(
         max_length=32,
         unique=True,
@@ -40,12 +35,14 @@ class OnlyCatUser(AbstractModel, AbstractUser):
     
     @staticmethod
     def base_attrs():
-        return ['id', 'is_active', 'created', 'created_by',
+        return ['id', 'is_active', 'created_at', 'created_by',
                 'last_login', 'is_superuser', 'is_staff',
                 'groups', 'user_permissions']
 
 
 class UserAuditLog(AbstractModel):
+    '''Logs of user activities'''
+
     class Actions(models.TextChoices):
         CREATED = 'created', 'Created'
         UPDATED = 'updated', 'Updated'
@@ -66,3 +63,24 @@ class UserAuditLog(AbstractModel):
     user = models.ForeignKey(OnlyCatUser, on_delete=models.CASCADE, related_name='logs')
     action = models.CharField(max_length=32, choices=Actions)
     details = models.JSONField(null=True)
+
+
+class UserToken(AbstractModel):
+    '''Record of token use for E-mail activation and Password Recovering (Forgot Password Case)'''
+
+    class Types(models.TextChoices):
+        EMAIL_ACTIVATION = 'email_activation', _('Email Activation')
+        PASSWORD_RESET = 'password_reset', _('Password Reset')
+
+    class Status(models.TextChoices):
+        PENDING = 'pending', _('Pending')
+        EXPIRED = 'expired', _('Expired')
+        ACTIVATED = 'activated', _('Activated')
+
+    user = models.ForeignKey(OnlyCatUser, on_delete=models.CASCADE, related_name='tokens')
+    for_email = models.EmailField()
+    type = models.CharField(max_length=32, choices=Types)
+    status = models.CharField(max_length=32, choices=Status, default=Status.PENDING)
+    token = models.CharField(max_length=512)
+    expired_at = models.DateTimeField(null=True)
+    used_at = models.DateTimeField(null=True)

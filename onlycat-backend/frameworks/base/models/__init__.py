@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django_currentuser.db.models import CurrentUserField
@@ -12,16 +13,27 @@ class AbstractModelQuerySet(models.QuerySet):
         return self.filter(is_active=False)
 
 
+class AbstractModelManager(models.Manager):
+    def get_queryset(self):
+        return AbstractModelQuerySet(self.model, using=self._db)
+    
+    def actives(self):
+        return self.get_queryset().actives()
+    
+    def inactives(self):
+        return self.get_queryset().inactives()
+
+
 class AbstractModel(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid4)
     is_active = models.BooleanField(editable=False, default=True)
-    created = models.DateTimeField(default=timezone.now)
-    created_by = CurrentUserField(on_delete=models.CASCADE, related_name='+')
-    objects: AbstractModelQuerySet = AbstractModelQuerySet.as_manager()
+    created_at = models.DateTimeField(default=timezone.now)
+    created_by = CurrentUserField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='+')
+    objects: AbstractModelManager = AbstractModelManager()
 
     @staticmethod
     def base_attrs():
-        return ['id', 'is_active', 'created', 'created_by']
+        return ['id', 'is_active', 'created_at', 'created_by']
 
     def delete(self, *args, **kwargs):
         self.is_active = False
@@ -29,4 +41,4 @@ class AbstractModel(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['-created']
+        ordering = ['-created_at']
