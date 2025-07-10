@@ -1,8 +1,2 @@
 [tools]
 node = "22"
-python = "3.13"
-uv = "latest"
-
-[settings]
-python.uv_venv_auto = true
-experimental = true

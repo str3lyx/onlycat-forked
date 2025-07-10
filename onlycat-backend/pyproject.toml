@@ -11,8 +11,15 @@ dependencies = [
     "django-filter>=25.1",
     "djangorestframework>=3.16.0",
     "drf-spectacular>=0.28.0",
+    "factory-boy>=3.3.3",
+    "freezegun>=1.5.2",
     "markdown>=3.8",
     "pillow>=11.2.1",
     "psycopg[binary]>=3.2.7",
+    "pytest-django>=4.11.1",
     "python-dotenv>=1.1.0",
 ]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "onlycat_backend.settings"
+python_files = ["tests.py", "test_*.py", "*_test.py", "tests/*.py"]
