@@ -2,10 +2,11 @@ from django.contrib.auth.models import UserManager, AbstractUser
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from typing import Self
 from frameworks.base.models import AbstractModel, AbstractModelManager
 
 
-class OnlyCatUserManager(AbstractModelManager, UserManager):
+class OnlyCatUserManager[T: models.Model](AbstractModelManager[T], UserManager[T]):
     pass
 
 
@@ -22,11 +23,34 @@ class OnlyCatUser(AbstractModel, AbstractUser):
     )
     email = models.EmailField()
     date_joined = None
-    objects: OnlyCatUserManager = OnlyCatUserManager()
+    objects: OnlyCatUserManager[Self] = OnlyCatUserManager()
 
     @property
     def fullname(self):
         return self.get_full_name()
+    
+    def __gen_create_log(self):
+        UserAuditLog.objects.create(
+            user=self,
+            action=UserAuditLog.Actions.CREATED,
+            created_at=self.created_at
+        )
+    
+    def __request_token(self):
+        UserAuditLog.objects.create(
+            user=self,
+            action=UserAuditLog.Actions.ACTIVATION_REQUEST,
+            created_at=self.created_at
+        )
+        UserToken.objects.create(
+            user=self,
+            for_email=self.email,
+            type=UserToken.Types.EMAIL_ACTIVATION,
+        )
+    
+    def on_created(self):
+        self.__gen_create_log()
+        self.__request_token()
 
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
@@ -66,7 +90,7 @@ class UserAuditLog(AbstractModel):
 
 
 class UserToken(AbstractModel):
-    '''Record of token use for E-mail activation and Password Recovering (Forgot Password Case)'''
+    '''Record of token use for e-mail activation and password recovering'''
 
     class Types(models.TextChoices):
         EMAIL_ACTIVATION = 'email_activation', _('Email Activation')
@@ -84,3 +108,7 @@ class UserToken(AbstractModel):
     token = models.CharField(max_length=512)
     expired_at = models.DateTimeField(null=True)
     used_at = models.DateTimeField(null=True)
+
+    @staticmethod
+    def request(*, user: OnlyCatUser, type: Types, **kwargs):
+        pass
