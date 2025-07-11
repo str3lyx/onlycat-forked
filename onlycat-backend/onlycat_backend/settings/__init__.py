@@ -38,6 +38,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+PASSWORD_RESET_TIMEOUT = 3600
+
 AUTH_USER_MODEL = 'user.OnlyCatUser'
 
 

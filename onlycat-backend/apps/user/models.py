@@ -1,4 +1,5 @@
 from django.contrib.auth.models import UserManager, AbstractUser
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -37,15 +38,18 @@ class OnlyCatUser(AbstractModel, AbstractUser):
         )
     
     def __request_token(self):
+        token = default_token_generator.make_token(self)
+        print(token)
+        # self.email_user(
+        #     subject='Email activation',
+        #     message=token
+        # )
+
         UserAuditLog.objects.create(
             user=self,
             action=UserAuditLog.Actions.ACTIVATION_REQUEST,
-            created_at=self.created_at
-        )
-        UserToken.objects.create(
-            user=self,
-            for_email=self.email,
-            type=UserToken.Types.EMAIL_ACTIVATION,
+            created_at=self.created_at,
+            details={ 'for_email': self.email }
         )
     
     def on_created(self):
@@ -87,28 +91,3 @@ class UserAuditLog(AbstractModel):
     user = models.ForeignKey(OnlyCatUser, on_delete=models.CASCADE, related_name='logs')
     action = models.CharField(max_length=32, choices=Actions)
     details = models.JSONField(null=True)
-
-
-class UserToken(AbstractModel):
-    '''Record of token use for e-mail activation and password recovering'''
-
-    class Types(models.TextChoices):
-        EMAIL_ACTIVATION = 'email_activation', _('Email Activation')
-        PASSWORD_RESET = 'password_reset', _('Password Reset')
-
-    class Status(models.TextChoices):
-        PENDING = 'pending', _('Pending')
-        EXPIRED = 'expired', _('Expired')
-        ACTIVATED = 'activated', _('Activated')
-
-    user = models.ForeignKey(OnlyCatUser, on_delete=models.CASCADE, related_name='tokens')
-    for_email = models.EmailField()
-    type = models.CharField(max_length=32, choices=Types)
-    status = models.CharField(max_length=32, choices=Status, default=Status.PENDING)
-    token = models.CharField(max_length=512)
-    expired_at = models.DateTimeField(null=True)
-    used_at = models.DateTimeField(null=True)
-
-    @staticmethod
-    def request(*, user: OnlyCatUser, type: Types, **kwargs):
-        pass

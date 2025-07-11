@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-from apps.user.models import OnlyCatUser, UserAuditLog, UserToken
+from apps.user.models import OnlyCatUser, UserAuditLog
 
 
 class UserRegisterTestCase(TestCase):
@@ -34,17 +34,11 @@ class UserRegisterTestCase(TestCase):
         assert user.fullname == 'John Doe'
 
         # check log
-        log = UserAuditLog.objects.first()
-        assert log is not None
-        assert log.user == user
-        assert log.action == UserAuditLog.Actions.CREATED
-        assert log.created_at == user.created_at
+        created_log = user.logs.actives().filter(action=UserAuditLog.Actions.CREATED).first()
+        assert created_log is not None
+        assert created_log.created_at == user.created_at
 
-        # check token
-        token = UserToken.objects.first()
-        assert token is not None
-        assert token.user == user
-        assert token.for_email == user.email
-        # assert token.created_at == user.created_at
-        assert token.type == UserToken.Types.EMAIL_ACTIVATION
-        assert token.status == UserToken.Status.PENDING
+        # check log
+        activate_log = user.logs.actives().filter(action=UserAuditLog.Actions.ACTIVATION_REQUEST).first()
+        assert activate_log is not None
+        assert activate_log.details['for_email'] == user.email
