@@ -2,6 +2,7 @@ from django.contrib.auth import logout
 from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics, permissions, status
+from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from .. import serializers
 
@@ -11,6 +12,8 @@ class PrivateOnlyCatUserView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
+        if not self.request.user.is_active:
+            raise NotFound
         return self.request.user
     
     def delete(self, request, *args, **kwargs):
@@ -25,6 +28,8 @@ class ChangePasswordView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
+        if not self.request.user.is_active:
+            raise NotFound
         return self.request.user
     
     @extend_schema(responses={200: serializers.OnlyCatUserSerializer})
