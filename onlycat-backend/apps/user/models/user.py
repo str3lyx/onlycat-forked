@@ -1,10 +1,12 @@
 from django.contrib.auth.models import UserManager, AbstractUser
-from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.validators import ASCIIUsernameValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from typing import Self
+
 from frameworks.base.models import AbstractModel, AbstractModelManager
+from .log import UserAuditLog, UserActions
+from ..utils import email_activation_token_generator
 
 
 class OnlyCatUserManager[T: models.Model](AbstractModelManager[T], UserManager[T]):
@@ -33,12 +35,24 @@ class OnlyCatUser(AbstractModel, AbstractUser):
     def __gen_create_log(self):
         UserAuditLog.objects.create(
             user=self,
-            action=UserAuditLog.Actions.CREATED,
+            action=UserActions.CREATED,
             created_at=self.created_at
         )
     
+    def __gen_update_log(self):
+        UserAuditLog.objects.create(
+            user=self,
+            action=UserActions.UPDATED,
+        )
+    
+    def __gen_delete_log(self):
+        UserAuditLog.objects.create(
+            user=self,
+            action=UserActions.DELETED
+        )
+    
     def __request_token(self):
-        token = default_token_generator.make_token(self)
+        token = email_activation_token_generator.make_token(self)
         print(token)
         # self.email_user(
         #     subject='Email activation',
@@ -47,7 +61,7 @@ class OnlyCatUser(AbstractModel, AbstractUser):
 
         UserAuditLog.objects.create(
             user=self,
-            action=UserAuditLog.Actions.ACTIVATION_REQUEST,
+            action=UserActions.ACTIVATION_REQUEST,
             created_at=self.created_at,
             details={ 'for_email': self.email }
         )
@@ -55,9 +69,14 @@ class OnlyCatUser(AbstractModel, AbstractUser):
     def on_created(self):
         self.__gen_create_log()
         self.__request_token()
+    
+    def on_updated(self):
+        if self.is_active:
+            self.__gen_update_log()
 
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
+        self.__gen_delete_log()
         self.username = self.id.hex
         self.save()
     
@@ -66,28 +85,3 @@ class OnlyCatUser(AbstractModel, AbstractUser):
         return ['id', 'is_active', 'created_at', 'created_by',
                 'last_login', 'is_superuser', 'is_staff',
                 'groups', 'user_permissions']
-
-
-class UserAuditLog(AbstractModel):
-    '''Logs of user activities'''
-
-    class Actions(models.TextChoices):
-        CREATED = 'created', 'Created'
-        UPDATED = 'updated', 'Updated'
-        CHANGE_EMAIL = 'change_email', 'Email Update'
-        CHANGE_PASSWORD = 'change_password', 'Change Password'
-        DELETED = 'deleted', 'Deleted'
-        # login
-        LOGIN_SUCCESS = 'login_success', 'Login Success'
-        LOGIN_FAILURE = 'login_failure', 'Login Failure'
-        LOGOUT        = 'logout', 'Logout'
-        # password
-        PASSWORD_RESET_REQUEST = 'password_reset_request', 'Password Reset Request'
-        PASSWORD_RESET_SUCCESS = 'password_reset_success', 'Password Reset Success'
-        # activation
-        ACTIVATION_REQUEST = 'activation_request', 'Email Activation Request'
-        ACTIVATION_SUCCESS = 'activation_success', 'Email Activation Success'
-
-    user = models.ForeignKey(OnlyCatUser, on_delete=models.CASCADE, related_name='logs')
-    action = models.CharField(max_length=32, choices=Actions)
-    details = models.JSONField(null=True)

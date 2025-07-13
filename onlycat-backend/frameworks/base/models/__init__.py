@@ -59,6 +59,6 @@ def post_save_callback(sender, instance, created, raw, using, update_fields, **k
         return
     
     instance._dirty = True
-    func = 'on_created' if created else 'on_update'
+    func = 'on_created' if created else 'on_updated'
     getattr(sender, func, lambda *_: None)(instance)
     del instance._dirty
