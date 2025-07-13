@@ -6,8 +6,5 @@ uv = "latest"
 python.uv_venv_auto = true
 experimental = true
 
-[tasks.runserver]
-run = "uv run manage.py runserver 0.0.0.0:8000"
-
-[tasks.makemigrations]
-run = "uv run manage.py makemigrations"
+[tasks.manage]
+run = "uv run manage.py"
