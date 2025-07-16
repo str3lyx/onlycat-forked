@@ -4,6 +4,7 @@ from django.db.models import signals
 from django.dispatch import receiver
 from django.utils import timezone
 from django_currentuser.db.models import CurrentUserField
+from functools import wraps
 from typing import Self
 from uuid import uuid4
 
@@ -53,12 +54,26 @@ class AbstractModel(models.Model):
         ordering = ['-created_at']
 
 
-@receiver(signals.post_save)
-def post_save_callback(sender, instance, created, raw, using, update_fields, **kwargs):
-    if not instance or hasattr(instance, '_dirty'):
-        return
+def prevent_recursion(func):
+    @wraps(func)
+    def _inner(sender, instance, *args, **kwargs):
+        if not isinstance(instance, AbstractModel):
+            return
+        if hasattr(instance, '_dirty'):
+            return
     
-    instance._dirty = True
-    func = 'on_created' if created else 'on_updated'
-    getattr(sender, func, lambda *_: None)(instance)
-    del instance._dirty
+        instance._dirty = True
+        try:
+            return func(sender, instance, *args, **kwargs)
+        finally:
+            del instance._dirty
+    return _inner
+
+
+@receiver(signals.post_save)
+@prevent_recursion
+def post_save_callback(sender, instance: AbstractModel, created, raw, using, update_fields, **kwargs):
+    if created:
+        instance.on_created()
+    else:
+        instance.on_updated()
