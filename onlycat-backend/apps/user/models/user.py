@@ -25,6 +25,7 @@ class OnlyCatUser(AbstractModel, AbstractUser):
         },
     )
     email = models.EmailField()
+    is_verified = models.BooleanField(default=False)
     date_joined = None
     objects: OnlyCatUserManager[Self] = OnlyCatUserManager()
 
@@ -37,12 +38,6 @@ class OnlyCatUser(AbstractModel, AbstractUser):
             user=self,
             action=UserActions.CREATED,
             created_at=self.created_at
-        )
-    
-    def __gen_update_log(self):
-        UserAuditLog.objects.create(
-            user=self,
-            action=UserActions.UPDATED,
         )
     
     def __gen_delete_log(self):
@@ -69,10 +64,6 @@ class OnlyCatUser(AbstractModel, AbstractUser):
     def on_created(self):
         self.__gen_create_log()
         self.__request_token()
-    
-    def on_updated(self):
-        if self.is_active:
-            self.__gen_update_log()
 
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
@@ -85,3 +76,7 @@ class OnlyCatUser(AbstractModel, AbstractUser):
         return ['id', 'is_active', 'created_at', 'created_by',
                 'last_login', 'is_superuser', 'is_staff',
                 'groups', 'user_permissions']
+
+    @staticmethod
+    def profile_log_attrs():
+        return ['first_name', 'last_name']

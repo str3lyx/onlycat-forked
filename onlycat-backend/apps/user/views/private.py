@@ -8,13 +8,17 @@ from .. import serializers
 
 
 class PrivateOnlyCatUserView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = serializers.OnlyCatUserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         if not self.request.user.is_active:
             raise NotFound
         return self.request.user
+    
+    def get_serializer_class(self):
+        if self.request.method in ['PUT', 'PATCH']:
+            return serializers.UserProfileEditSerializer
+        return serializers.OnlyCatUserSerializer
     
     def delete(self, request, *args, **kwargs):
         self.get_object().delete()

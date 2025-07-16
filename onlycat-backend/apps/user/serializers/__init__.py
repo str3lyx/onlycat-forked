@@ -1,17 +1,13 @@
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.validators import ASCIIUsernameValidator
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
-from . import models, validators
 
-
-class PasswordField(serializers.CharField):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.write_only = True
-        self.validators.append(validators.ASCIIPasswordValidator())
-        self.style['input_type'] = 'password'
+from .. import models
+from ..models.enums import UserActions
+from .fields import PasswordField
 
 
 class OnlyCatUserSerializer(serializers.ModelSerializer):
@@ -29,10 +25,41 @@ class OnlyCatUserSerializer(serializers.ModelSerializer):
             UniqueValidator(queryset=models.OnlyCatUser.objects.actives())
         ]
     )
+    is_verified = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = models.OnlyCatUser
         fields = '__all__'
+        read_only_fields = models.OnlyCatUser.base_attrs()
+
+
+class UserProfileEditSerializer(OnlyCatUserSerializer):
+    username = serializers.CharField(read_only=True)
+    password = None
+    email = serializers.EmailField(read_only=True)
+
+    def __get_update_data(self, instance, validated_data):
+        details = {'old_data': {}, 'new_data': {}}
+        for field in models.OnlyCatUser.profile_log_attrs():
+            if (old := getattr(instance, field, None)) != validated_data.get(field, None):
+                details['old_data'][field] = old
+                details['new_data'][field] = validated_data.get(field, None)
+        return details
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        details = self.__get_update_data(instance, validated_data)
+        user = super().update(instance, validated_data)
+        models.UserAuditLog.objects.create(
+            user=user,
+            action=UserActions.UPDATED,
+            details=details
+        )
+        return user
+
+    class Meta:
+        model = models.OnlyCatUser
+        exclude = ['password']
         read_only_fields = models.OnlyCatUser.base_attrs()
 
 
@@ -46,7 +73,7 @@ class UserRegistrationSerializer(OnlyCatUserSerializer):
 
 class SignInSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=16)
-    password = serializers.CharField(style={'input_type': 'password'})
+    password = PasswordField()
 
     class Meta:
         fields = ['username', 'password']

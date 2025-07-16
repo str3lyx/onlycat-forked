@@ -131,6 +131,10 @@ class UserSelfTestCase(TestCase):
 
         log = self.user.logs.actives().filter(action=UserActions.UPDATED).first()
         assert log is not None
+        assert log.details['old_data']['first_name'] == 'John'
+        assert log.details['new_data']['first_name'] == 'Zhong'
+        assert log.details['old_data']['last_name'] == 'Doe'
+        assert log.details['new_data']['last_name'] == 'Xina'
 
         self.user.refresh_from_db()
         assert self.user.first_name == 'Zhong'
