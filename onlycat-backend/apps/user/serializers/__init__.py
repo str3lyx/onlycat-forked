@@ -6,8 +6,8 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from .. import models
-from ..models.enums import UserActions
 from .fields import PasswordField
+from ..utils.log import gen_update_log
 
 
 class OnlyCatUserSerializer(serializers.ModelSerializer):
@@ -38,23 +38,10 @@ class UserProfileEditSerializer(OnlyCatUserSerializer):
     password = None
     email = serializers.EmailField(read_only=True)
 
-    def __get_update_data(self, instance, validated_data):
-        details = {'old_data': {}, 'new_data': {}}
-        for field in models.OnlyCatUser.profile_log_attrs():
-            if (old := getattr(instance, field, None)) != validated_data.get(field, None):
-                details['old_data'][field] = old
-                details['new_data'][field] = validated_data.get(field, None)
-        return details
-
     @transaction.atomic
     def update(self, instance, validated_data):
-        details = self.__get_update_data(instance, validated_data)
-        user = super().update(instance, validated_data)
-        models.UserAuditLog.objects.create(
-            user=user,
-            action=UserActions.UPDATED,
-            details=details
-        )
+        with gen_update_log(instance):
+            user = super().update(instance, validated_data)
         return user
 
     class Meta:
@@ -96,3 +83,18 @@ class PasswordChangeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.OnlyCatUser
         fields = ['current_password', 'password']
+
+
+class EmailChangeSerializer(serializers.ModelSerializer):
+    current_password = PasswordField(min_length=8, max_length=16)
+    email = serializers.EmailField()
+
+    def validate_current_password(self, current_password):
+        self.instance: models.OnlyCatUser
+        if not self.instance.check_password(current_password):
+            raise serializers.ValidationError(_('Mismatch password'))
+        return current_password
+
+    class Meta:
+        model = models.OnlyCatUser
+        fields = ['current_password', 'email']

@@ -4,7 +4,9 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import views, generics, permissions, status
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
+
 from .. import models, serializers
+from ..utils.token import gen_activation_token
 
 
 @extend_schema(summary=_('User Registration'), tags=['Authentication'])
@@ -12,6 +14,10 @@ class UserRegistrationView(generics.CreateAPIView):
     queryset = models.OnlyCatUser.objects.actives()
     serializer_class = serializers.UserRegistrationSerializer
     permission_classes = [permissions.AllowAny]
+
+    def perform_create(self, serializer):
+        user = serializer.save()
+        gen_activation_token(user)
 
 
 @extend_schema(
